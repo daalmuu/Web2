@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BellaCucina | My Recipes</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header>
+    <div class="header-container">
+          <a href="User-dashboard.html"><img src="images\logo.png" alt="BellaCucina Logo" class="logo"></a>
+
+        <nav class="nav-menu">
+           <a href="index.html" class="logout-link">
+                    <span class="icon">
+                        <span class="bracket"></span>
+                        <span class="arrow">➜</span>
+                    </span>
+                    <span class="text">Sign out</span>
+                </a>
+        </nav>
+    </div>
+</header>
+
+<!-- ===== Page Content ===== -->
+<main class="dashboard-page fade-in">
+
+    <!-- Page Title -->
+    <div class="welcome-banner">
+        <span class="welcome-label">My Kitchen</span>
+        <h1>📋 My Recipes</h1>
+        <p>Manage and edit your added recipes</p>
+    </div>
+
+    <!-- Add Recipe Button -->
+    <div style="margin-bottom: 25px; text-align: right;">
+        <a href="add.html" class="btn-green">➕ Add New Recipe</a>
+    </div>
+
+    <!-- ===== Recipes Table ===== -->
+    <section class="table-section">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Recipe</th>
+                    <th>Ingredients</th>
+                    <th>Instructions</th>
+                    <th>Video</th>
+                    <th>Likes</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <!-- Recipe name + photo (link) -->
+                    <td>
+                        <a href="view my recipe.html">
+                            <div class="recipe-cell">
+                                <img src="images\mozzarella.jpg" class="table-img">
+                                <span>low-carb Margherita pizza</span>
+                            </div>
+                        </a>
+                    </td>
+
+                    <!-- Ingredients list -->
+                    <td>
+                        <ul class="small-list">
+                            <li>Almond flour – 2 cups</li>
+                            <li>Shredded mozzarella cheese – 1½ cups</li>
+                            <li>Cream cheese – 2 tbsp</li>
+                            <li>Egg – 1 large</li>
+                            <li>Tomato sauce – ½ cup</li>
+                            <li>Fresh basil leaves – a handful</li>
+                            <li>Olive oil – 1 tbsp</li>
+                            <li>Salt – to taste</li>
+                            <li>Pepper – to taste</li>
+                            <li>Garlic powder – ¼ tsp </li>
+                        </ul>
+                    </td>
+
+                    <!-- Instructions list -->
+                    <td>
+                        <ul class="small-list">
+                            <li>Mix ingredients</li>
+                            <li>Bake for 30 minutes</li>
+                            <li>Let it cool</li>
+                        </ul>
+                    </td>
+
+                    <!-- Video -->
+                    <td>
+                        <a href="https://youtu.be/JNafwVX9RP4?si=1tz4hqYHBAUl19AD/" target="_blank" class="video-link">
+                            Watch Video
+                        </a>
+                    </td>
+
+                    <!-- Likes -->
+                    <td>
+                        <span class="likes-badge">👍40</span>
+                    </td>
+
+                    <!-- Edit -->
+                    <td>
+                        <a href="edit.html" class="btn-icon edit">Edit</a>
+                    </td>
+
+                    <!-- Delete (non-functional) -->
+                    <td>
+                        <a href="my-recipe.html" class="btn-icon delete">Delete</a>
+                    </td>
+                </tr>
+
+                <!-- Example without video -->
+                <tr>
+                    <td>
+                        <a href="view my recipe.html">
+                            <div class="recipe-cell">
+                                <img src="images\mozzarella.jpg" class="table-img">
+                                <span>low-carb Margherita pizza</span>
+                            </div>
+                        </a>
+                    </td>
+
+                    <td>
+                        <ul class="small-list">
+                            <li>Almond flour – 2 cups</li>
+                            <li>Shredded mozzarella cheese – 1½ cups</li>
+                            <li>Cream cheese – 2 tbsp</li>
+                            <li>Egg – 1 large</li>
+                            <li>Tomato sauce – ½ cup</li>
+                            <li>Fresh basil leaves – a handful</li>
+                            <li>Olive oil – 1 tbsp</li>
+                            <li>Salt – to taste</li>
+                            <li>Pepper – to taste</li>
+                            <li>Garlic powder – ¼ tsp </li>
+                        </ul>
+                    </td>
+
+                    <td>
+                        <ul class="small-list">
+                            <li>Mix all ingredients</li>
+                            <li>Form small balls</li>
+                        </ul>
+                    </td>
+
+                    <td>
+                        <span class="no-video">No video for recipe</span>
+                    </td>
+
+                    <td>
+                        <span class="likes-badge">👍18</span>
+                    </td>
+
+                    <td>
+                        <a href="edit.html" class="btn-icon edit">Edit</a>
+                    </td>
+
+                    <td>
+                        <a href="my-recipe.html" class="btn-icon delete">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+    © 2026 BellaCucina. All rights reserved.
+</footer>
+
+</body>
+</html>

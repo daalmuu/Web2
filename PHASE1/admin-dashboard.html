@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>BellaCucina - Admin Dashboard</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <!--header-->
+        <header>
+            <div class="header-container">
+                <img src="images/logo.png" alt="Logo" class="logo">
+                    
+                <nav class="nav-menu">
+                <a href="index.html" class="logout-link">
+                    <span class="icon">
+                        <span class="bracket"></span>
+                        <span class="arrow">➜</span>
+                    </span>
+                    <span class="text">Sign out</span>
+                </a>
+                </nav> 
+            </div>
+        </header>
+        
+        <main class="dashboard-page">
+            
+            <!--Admin Banner-->
+            <div class="welcome-banner admin-banner">
+                <span class="welcome-lable">Admin Panel</span>
+                <h1>Welcome, Admin! 👋</h1>
+                <p>Manage reported content and users</p>
+            </div>
+            
+            <div class="info-card admin-info">
+            <h3>👤 My Information</h3>
+            <div class="admin-details">
+                <div class="detail-item red-bg">
+                    <span class="detail-label">Name</span>
+                    <span class="detail-value">Admin User</span>
+                </div>
+                <div class="detail-item red-bg">
+                    <span class="detail-label">Email Address</span>
+                    <span class="detail-value">admin@bellacucina.com</span>
+                </div>
+            </div>
+        </div>
+            
+            <!--Reported Recipes-->
+            
+            <div class="table-section">
+                <h2>🚩 Reported Recipes</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Recipe Name</th>
+                            <th>Recipe Creator</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="view-recipe.html" class="red-link">low-carb Margherita pizza</a></td>
+                            <td>
+                                <div class="creator-info">
+                                    <div class="creator-avatar">M</div>
+                                    <span>Maria Rossi</span>
+                                </div>
+                            </td>
+                            
+                            <td>
+                                <form class="action-form">
+                                    <label><input type="radio" name="action1" value="block">
+                                        <span class="red-text">Block User</span></label>
+                                    <label><input type="radio" name="action1" value="dismiss">Dismiss</label>
+                                    <button type="submit" class="btn-red btn-small">Submit</button>
+                                </form>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><a href="view-recipe.html" class="red-link">Suspicious Recipe</a></td>
+                            
+                            <td>
+                                <div class="creator-info">
+                                    <div class="creator-avatar">U</div>
+                                    <span>Unknown User</span>
+                                </div>
+                            </td>
+                            
+                            <td>
+                                <form class="action-form">
+                                    <label><input type="radio" name="action2" value="block">
+                                        <span class="red-text">Block User</span></label>
+                                    <label><input type="radio" name="action2" value="dismiss">Dismiss</label>
+                                    <button type="submit" class="btn-red btn-small">Submit</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!--Blocked Users-->
+            
+            <div class="table-section">
+                <h2>Blocked Users List</h2>
+                <table class="data-table">
+                    
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email Address</th>
+                    </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr>
+                            <td>Blocked User 1</td>
+                            <td>blocked1@example.com</td>
+                        </tr>
+                        <tr>
+                            <td>Blocked User 2</td>
+                            <td>blocked2@example.com</td>
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
+        </main>
+        
+        
+        <!-- ===== Footer ===== -->
+        <footer>
+    © 2026 BellaCucina. All rights reserved.
+        </footer>
+        
+    </body>
+</html>

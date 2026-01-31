@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BellaCucina | User Page</title>
+    <link rel="stylesheet" href="main.css">
+    
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header>
+    <div class="header-container">
+          <a href="User-dashboard.html"><img src="images\logo.png" alt="BellaCucina Logo" class="logo"></a>
+
+        <nav class="nav-menu">
+            <a href="index.html" class="logout-link">
+                    <span class="icon">
+                        <span class="bracket"></span>
+                        <span class="arrow">➜</span>
+                    </span>
+                    <span class="text">Sign out</span>
+                </a>
+        </nav>
+    </div>
+</header>
+
+<!-- ===== Dashboard ===== -->
+<main class="dashboard-page fade-in">
+    <!-- Welcome -->
+    <div class="welcome-banner">
+        <span class="welcome-label">Welcome</span>
+        <h1 id="welcomeName">Ghala 👋</h1>
+        <p>Discover and share delicious recipes</p>
+    </div>
+
+    <!-- User Info + Stats -->
+    <div class="info-cards">
+
+        <!-- User Info -->
+        <div class="info-card">
+            <h3>👤 My Information</h3>
+            <div class="user-info">
+                <div class="creator-avatar large"><img src="images/personal-photo.jpg" class="user-avatar" alt="user photo"></div>
+                <div>
+                    <div class="user-name">Ghala Ibrahim</div>
+                    <div class="user-email">ghala@email.com</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Recipes -->
+        <div class="info-card">
+            <h3>📊 My Recipes</h3>
+
+            <div class="stat-box green-bg">
+                <span>Total Recipes</span>
+                <span class="stat-value">15</span>
+            </div>
+
+            <div class="stat-box red-bg">
+                <span>Total Likes</span>
+                <span class="stat-value red">132</span>
+            </div>
+
+            <a href="my-recipe.html" class="btn-green btn-full">View My Recipes</a>
+        </div>
+    </div>
+
+    <!-- ===== All Recipes Table ===== -->
+    <section class="table-section">
+        <div class="table-header">
+            <h2>🍽️ All Available Recipes</h2>
+
+            <div class="filter-area">
+                <select>
+                    <option>All Categories</option>
+                    <option>Dessert</option>
+                    <option>Main Dish</option>
+                    <option>Healthy</option>
+                </select>
+                <button class="btn-outline btn-small">Filter</button>
+            </div>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Recipe Name</th>
+                    <th>Photo</th>
+                    <th>Creator</th>
+                    <th>Likes</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="view my recipe.html">low-carb Margherita pizza</a>
+                    </td>
+                    <td>
+                        <img src="images\mozzarella.jpg" class="table-img">
+                    </td>
+                    <td>
+                        <div class="creator-info">
+                            <div class="creator-avatar"><img src="images/chef.png" class="table-img" alt="Chef"></div>
+                            <span>Maria Rossi</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="likes-badge">👍40</span>
+                    </td>
+                    <td>
+                        <span class="category-badge">Healthy Italian meal</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ===== Favourite Recipes ===== -->
+    <section class="table-section">
+        <h2>❤️ My Favourite Recipes️</h2>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Recipe Name</th>
+                    <th>Photo</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="view my recipe.html">low-carb Margherita pizza</a>
+                    </td>
+                    <td>
+                        <img src="images/mozzarella.jpg" class="table-img">
+                    </td>
+                    <td>
+                        <a href="User-dashboard.html" class="red-link">Remove</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+    © 2026 BellaCucina. All rights reserved.
+</footer>
+
+<script src="user.js"></script>
+</body>
+</html>
