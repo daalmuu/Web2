@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BellaCucina | View Recipe </title>
+    <link rel="stylesheet" href="newcss.css">
+</head>
+
+<body>
+
+<!-- ===== Header ===== -->
+<header>
+    <div class="header-container">
+          <a href="User-dashboard.html"><img src="images\logo.png" alt="BellaCucina Logo" class="logo"></a>
+
+        <nav class="nav-menu">
+            <a href="index.html" class="logout-link">
+                    <span class="icon">
+                        <span class="bracket"></span>
+                        <span class="arrow">➜</span>
+                    </span>
+                    <span class="text">Sign out</span>
+                </a>
+        </nav>
+    </div>
+</header>
+<!-- ===== View Recipe Page ===== -->
+<main class="recipe-view-page">
+
+    <!-- ===== Recipe Hero (Name + Photo + Buttons) ===== -->
+    <div class="recipe-hero">
+        <img src="images/Tir.webp" alt="Recipe Photo">
+
+        <div class="recipe-actions">
+            <button class="action-btn favourite">❤ Favourite</button>
+            <button class="action-btn like">👍 Like</button>
+<a href="admin.html" target="_blank" class="action-btn report">🚩 Report</a>
+        </div>
+
+        <div class="recipe-hero-overlay">
+            <h1>low-Calories Tiramisu</h1>
+        </div>
+    </div>
+
+    <!-- ===== Recipe Info (Creator + Category + Description) ===== -->
+    <div class="recipe-info-box">
+
+        <div class="creator-section">
+<img src="images/chef.png" class="chef-photo" alt="Chef">
+           <div>
+                <span class="label">Recipe Creator</span>
+                <div class="creator-name">Maria Rossi</div>
+            </div>
+        </div>
+
+        <span class="category-badge large">Dessert</span>
+
+        <p class="recipe-description">
+            A light and healthy low-calorie tiramisu,
+made with creamy Greek yogurt, finely ground oats, strong black coffee, and a touch of natural honey.
+Perfect for anyone looking for a guilt-free dessert, and ideal for a light treat or after-meal sweet.
+        </p>
+    </div>
+
+    <!-- ===== Ingredients & Instructions ===== -->
+    <div class="recipe-details">
+        <!-- Ingredients -->
+        <div class="detail-box">
+            <h2>Ingredients</h2>
+           <ul class="ingredients-list">
+    <li>
+        <span class="bullet"></span>
+        Plain Greek Yogurt (0–2% fat) – 1½ cups
+    </li>
+    <li>
+        <span class="bullet"></span>
+        Rolled Oats (finely ground) – ¾ cup
+    </li>
+    <li>
+        <span class="bullet"></span>
+        Strong Black Coffee (cooled) – ½ cup
+    </li>
+    <li>
+        <span class="bullet"></span>
+        Raw Honey or Maple Syrup – 2 tablespoons
+    </li>
+    <li>
+        <span class="bullet"></span>
+        Unsweetened Cocoa Powder – 1 tablespoon
+    </li>
+</ul>
+        </div>
+        
+     
+        <!-- Instructions -->
+        <div class="detail-box">
+            <h2>Instructions</h2>
+            <ul class="instructions-list">
+    <li>
+        <span class="step">1</span>
+        Grind the oats into a fine powder using a blender or food processor.
+    </li>
+    <li>
+        <span class="step">2</span>
+        Brew the coffee and let it cool completely.
+    </li>
+    <li>
+        <span class="step">3</span>
+        Mix the Greek yogurt and honey in a bowl until smooth and creamy.
+    </li>
+    <li>
+        <span class="step">4</span>
+        Dip the ground oats lightly into the coffee, then layer them in a serving dish.
+    </li>
+    <li>
+        <span class="step">5</span>
+        Spread the yogurt mixture on top, repeat the layers, and finish with a light dusting of cocoa powder.
+    </li>
+</ul>
+
+        </div>
+
+    </div>
+
+    <!-- ===== Video  ===== -->
+    <div class="video-box">
+        <h2>Recipe Video</h2>
+
+        <a href="https://www.istockphoto.com/video/woman-making-homemade-tiramisu" target="_blank" class="video-link-box">
+            <div class="play-icon">▶</div>
+            <div>
+                <div class="video-title">Watch recipe preparation</div>
+                <div class="video-subtitle">video</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- ===== Comments ===== -->
+    <div class="comments-section">
+        <h2>Comments</h2>
+
+        <form class="comment-form">
+            <input type="text" placeholder="Write a comment...">
+            <button class="btn-green btn-small">Add Comment</button>
+        </form>
+
+        <div class="comments-list">
+
+            <!-- Newest comment -->
+            <div class="comment">
+                <div class="comment-avatar">L</div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="comment-author">Leena</span>
+                        <span class="comment-date">Just now</span>
+                    </div>
+                    <p>Easy and delicious recipe </p>
+                </div>
+            </div>
+
+            <div class="comment">
+                <div class="comment-avatar">A</div>
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="comment-author">Ahmed</span>
+                        <span class="comment-date">2 hours ago</span>
+                    </div>
+                    <p>Very healthy and tasty!</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+    © 2026 BellaCucina. All rights reserved.
+</footer>
+
+</body>
+</html>
