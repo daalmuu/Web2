@@ -1058,22 +1058,11 @@ button:hover{
     font-size: 50px;
 }
 
-.recipe-actions {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.action-btn {
+.recipe-actions .action-btn{
     padding: 10px 16px;
-    border-radius: 10px;
-    border: none;
     font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    background: white;
+    margin: 0;
+    line-height: 1;
 }
 
 .action-btn.favourite {
@@ -1493,3 +1482,4 @@ button:hover{
     
     
 }
+
