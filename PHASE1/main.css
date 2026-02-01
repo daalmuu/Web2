@@ -775,6 +775,8 @@ footer {
     border-radius: 20px;
     font-weight: bold;
     font-size: 13px;
+    text-align: center;
+
 }
 
 .category-badge {
@@ -785,6 +787,8 @@ footer {
     border-radius: 20px;
     font-weight: bold;
     font-size: 13px;
+    text-align: center;
+
 }
 
 .category-badge.large {
@@ -810,6 +814,18 @@ footer {
     margin-bottom: 4px;
 }
 
+.small-list li {
+    margin-bottom: 4px;
+    list-style-type:circle;
+}
+
+.inst-list li {
+    margin-bottom: 4px;
+    list-style-type:decimal;
+    font-size: 13px;
+    color: #666;
+}
+
 .video-link {
     display: inline-block;
     padding: 6px 12px;
@@ -817,6 +833,7 @@ footer {
     color: #C84B4B;
     border-radius: 20px;
     font-size: 13px;
+    text-align: center;
 }
 
 .video-link:hover {
@@ -1480,7 +1497,7 @@ button:hover{
         flex-direction: column;
     }
 
-
+}
 	/* breadcrumbs*/
 
 .breadcrumbs {
