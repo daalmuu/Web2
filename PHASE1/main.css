@@ -130,7 +130,6 @@ transform: scale(1.05);
 }
 
 .nav-link.logout:hover {
-    color: #C84B4B;
      transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
@@ -287,7 +286,7 @@ transform: scale(1.05);
 }
 
 .signup-link a {
-    color: #C84B4B;
+    color: #2D5A3D;
     font-weight: bold;
 }
 
