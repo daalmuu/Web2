@@ -1519,30 +1519,6 @@ button:hover{
     }
 
 }
-	/* breadcrumbs*/
-
-.breadcrumbs {
-font-size: 0.95em;
-margin: 0;
-padding: 0.625em 2.5em; /* 10px 40px */
-background-color: #2D5A3D;
-color: #ffffff;
-}
-
-.breadcrumbs a {
-color: #ffffff;
-text-decoration: none;
-}
-
-.breadcrumbs a:hover {
-text-decoration: underline;
-}
-
-
-.breadcrumbs .current {
-color: #ffffff;
-font-weight: bold;
-}
 
     
 
