@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BellaCucina|Add Recipe</title>
+  <link rel="stylesheet" href="main.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+
+<header>
+    <div class="header-container">
+          <a href="User-dashboard.html"><img src="images\logo.png" alt="BellaCucina Logo" class="logo"></a>
+
+        <nav class="nav-menu">
+            <a href="index.html" class="logout-link">
+                    <span class="icon">
+                        <span class="bracket"></span>
+                        <span class="arrow">➜</span>
+                    </span>
+                    <span class="text">Sign out</span>
+                </a>
+        </nav>
+    </div>
+</header>
+
+
+
+
+<div class="container">
+
+  <form id="editForm" onsubmit="addRecipe(); return false;">
+
+    <h2>Add Recipe</h2>
+
+    <label for="recipeName"><span class="req-star">*</span> Recipe Name</label>
+    <input id="recipeName" name="recipeName" type="text" placeholder="tiramisu etc..">
+
+    <label for="category"><span class="req-star">*</span> Category</label>
+    <select id="category" name="category">
+      <option value="" selected disabled hidden>select any choice</option>
+      <option value="Appetizers">Appetizers</option>
+      <option value="Main Course">Main Course</option>
+      <option value="Dessert">Dessert</option>
+    </select>
+
+    <label for="description"><span class="req-star">*</span> Description</label>
+    <textarea id="description" name="description" placeholder="write any thing that u like !"></textarea>
+
+    <label for="recipePhoto"><span class="req-star">*</span> Recipe Photo</label>
+    <input id="recipePhoto" name="recipePhoto" type="file" accept="image/*">
+
+    <!-- INGREDIENTS -->
+    <label><span class="req-star">*</span> Ingredients</label>
+    <div id="ingredients">
+      <div class="ingredient-row">
+        <span class="ing-num">1.</span>
+        <input class="ing-name" type="text" placeholder="water etc...">
+        <input class="ing-qty" type="text" placeholder="100 g">
+        <span class="delete" onclick="deleteRow(this)">
+          <i class="fa-solid fa-trash"></i>
+        </span>
+      </div>
+    </div>
+
+    <button class="add-btn" type="button" onclick="addIngredient()">+ Add Ingredient</button>
+
+    <!-- STEPS -->
+    <label><span class="req-star">*</span> Instructions</label>
+    <div id="steps">
+      <div class="step-row">
+        <span class="step-num">1</span>
+        <input type="text" placeholder="Dip biscuits in coffee...">
+        <span class="delete" onclick="deleteRow(this)">
+          <i class="fa-solid fa-trash"></i>
+        </span>
+      </div>
+    </div>
+
+    <button class="add-btn" type="button" onclick="addStep()">+ Add Step</button>
+
+    <label for="videoUrl">Add Video URL</label>
+    <input id="videoUrl" name="videoUrl" type="url" placeholder="https://www.........">
+
+    <label for="videoFile">Or Upload New Video</label>
+    <input id="videoFile" name="videoFile" type="file" accept="video/*">
+
+    <div class="buttons">
+      <button type="button" onclick="window.location='my-recipe.html'">Cancel</button>
+      <button type="submit">Add Recipe</button>
+    </div>
+
+  </form>
+
+</div>
+
+<footer>
+    © 2026 BellaCucina. All rights reserved.
+</footer>
+
+
+<script src="add.js"></script>
+</body>
+</html>
