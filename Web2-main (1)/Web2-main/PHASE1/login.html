@@ -33,7 +33,8 @@
       <h1>Welcome Back</h1>
       <p class="auth-subtitle">Log in to your BellaCucina account</p>
 
-      <form>
+      <form action="user-dashboard.html" method="get">
+
         <div class="input-group">
           <label for="email">Email Address</label>
           <input id="email" type="email" placeholder="your@email.com" required />
@@ -44,9 +45,14 @@
           <input id="pass" type="password" placeholder="••••••••" required />
         </div>
 
-        <!-- Buttons required -->
-      <a href="user-dashboard.html" class="btn-green btn-full">Log in as User</a>
-<a href="admin-dashboard.html" class="btn-outline-red btn-full">Log in as Admin</a>
+       <!-- Buttons required -->
+     <button type="submit" class="btn-green btn-full">
+  Log in as User
+</button>
+
+<button type="submit" formaction="admin-dashboard.html" class="btn-outline-red btn-full">
+  Log in as Admin
+</button>
 
     
 
@@ -63,4 +69,5 @@
     © 2026 BellaCucina. All rights reserved.
   </footer>
     </body>
+
 </html>
