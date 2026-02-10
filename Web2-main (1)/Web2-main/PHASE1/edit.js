@@ -33,17 +33,119 @@ function addStep(){
 
 function deleteRow(icon){
     icon.parentElement.remove();
-
     renumberRows();
 }
 
+/* =========================
+   Validation helpers
+========================= */
+
+function isValidName(){
+    var name = document.getElementById("recipeName").value.trim();
+    return name !== "";
+}
+
+function isValidCategory(){
+    var category = document.getElementById("category").value;
+    return category !== "";
+}
+
+function isValidDescription(){
+    var desc = document.getElementById("description").value.trim();
+    return desc !== "";
+}
+
+// Ingredients: لازم على الأقل صف واحد مكتمل (name + qty)
+function hasValidIngredient(){
+    var rows = document.querySelectorAll("#ingredients .ingredient-row");
+
+    for (var i = 0; i < rows.length; i++){
+        var n = rows[i].querySelector(".ing-name").value.trim();
+        var q = rows[i].querySelector(".ing-qty").value.trim();
+        if (n !== "" && q !== "") return true;
+    }
+    return false;
+}
+
+// Steps: لازم على الأقل خطوة وحدة
+function hasValidStep(){
+    var steps = document.querySelectorAll("#steps .step-row input");
+    for (var i = 0; i < steps.length; i++){
+        if (steps[i].value.trim() !== "") return true;
+    }
+    return false;
+}
+
+// Photo optional, but if chosen must be image
+function isValidPhotoFile(){
+    var photoInput = document.getElementById("photoFile");
+    if (!photoInput) return true;
+    if (!photoInput.files || photoInput.files.length === 0) return true;
+    return photoInput.files[0].type.startsWith("image/");
+}
+
+// Video optional, but if chosen must be video
+function isValidVideoFile(){
+    var videoInput = document.getElementById("videoFile");
+    if (!videoInput) return true;
+    if (!videoInput.files || videoInput.files.length === 0) return true;
+    return videoInput.files[0].type.startsWith("video/");
+}
+
+/* =========================
+   Update Recipe (submit)
+========================= */
+
 function updateRecipe(){
+    var errors = [];
+
+    // REQUIRED in edit (same rules as add)
+    if (!isValidName()) {
+        errors.push("• Recipe name cannot be empty.");
+    }
+
+    if (!isValidCategory()) {
+        errors.push("• Category cannot be empty.");
+    }
+
+    if (!isValidDescription()) {
+        errors.push("• Description cannot be empty.");
+    }
+
+    if (!hasValidIngredient()) {
+        errors.push("• Please keep at least one ingredient (name + quantity).");
+    }
+
+    if (!hasValidStep()) {
+        errors.push("• Please keep at least one instruction step.");
+    }
+
+    // OPTIONAL files, but must be correct type if used
+    if (!isValidPhotoFile()) {
+        errors.push("• Change Photo must be an image file only.");
+    }
+
+    if (!isValidVideoFile()) {
+        errors.push("• Upload New Video must be a video file only.");
+    }
+
+    // Show ONE alert
+    if (errors.length > 0) {
+        alert("Fix the following:\n\n" + errors.join("\n"));
+        return;
+    }
+
     window.location.href = "my-recipe.html";
 }
+
+/* =========================
+   Numbering 
+========================= */
 
 function renumberRows(){
     // Ingredients
     let ingContainer = document.getElementById("ingredients");
+
     let ingRows = ingContainer.getElementsByClassName("ingredient-row");
 
     for(let i = 0; i < ingRows.length; i++){
@@ -70,10 +172,9 @@ function renumberRows(){
 ========================= */
 
 window.onload = function(){
-    // يبقي الترقيم شغال
     renumberRows();
 
-    // Change Photo: لازم صورة فقط (وهو اختياري)
+    // Change Photo: image only (optional)
     var photoInput = document.getElementById("photoFile");
     if(photoInput){
         photoInput.onchange = function(){
@@ -87,7 +188,7 @@ window.onload = function(){
         };
     }
 
-    // Upload Video: لازم فيديو فقط (وهو اختياري)
+    // Upload Video: video only (optional)
     var videoInput = document.getElementById("videoFile");
     if(videoInput){
         videoInput.onchange = function(){
@@ -101,3 +202,4 @@ window.onload = function(){
         };
     }
 };
+
