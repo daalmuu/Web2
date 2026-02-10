@@ -161,4 +161,14 @@ function addRecipe() {
 }
 
 
+function checkVideo(input){
+    const file = input.files[0];
+    if(file && !file.type.startsWith('video/')){
+        alert("Please select a video file only!");
+        input.value = "";
+    }
+}
+
+
+
 window.onload = renumberRows;
