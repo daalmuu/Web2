@@ -123,52 +123,43 @@ function hasValidStep() {
 ========================= */
 
 function addRecipe() {
-  let valid = true;
+ 
+  let errors = [];
 
   if (!isValidName()) {
-    alert("Please enter recipe name.");
-    valid = false;
+    errors.push("• Please enter recipe name.");
   }
 
   if (!isValidCategory()) {
-    alert("Please choose a category.");
-    valid = false;
+    errors.push("• Please choose a category.");
   }
 
   if (!isValidDescription()) {
-    alert("Please enter description.");
-    valid = false;
+    errors.push("• Please enter description.");
   }
 
   if (!isValidImage()) {
-    alert("Please upload a recipe image.");
-    valid = false;
+    errors.push("• Please upload a recipe image.");
   }
 
   if (!hasValidIngredient()) {
-    alert("Please add at least one ingredient (name + quantity).");
-    valid = false;
+    errors.push("• Please add at least one ingredient (name + quantity).");
   }
 
   if (!hasValidStep()) {
-    alert("Please add at least one instruction step.");
-    valid = false;
+    errors.push("• Please add at least one instruction step.");
   }
 
-  if (!valid) return;
+ 
+  if (errors.length > 0) {
+    alert("Fix the following:\n\n" + errors.join("\n"));
+    return;
+  }
 
   window.location.href = "my-recipe.html";
+
+ 
 }
-
-
-function checkVideo(input){
-    const file = input.files[0];
-    if(file && !file.type.startsWith('video/')){
-        alert("Please select a video file only!");
-        input.value = "";
-    }
-}
-
 
 
 window.onload = renumberRows;
