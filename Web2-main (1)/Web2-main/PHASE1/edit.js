@@ -12,7 +12,6 @@ function addIngredient(){
 
     container.appendChild(row);
 
-   
     renumberRows();
 }
 
@@ -29,21 +28,18 @@ function addStep(){
 
     container.appendChild(row);
 
-    
     renumberRows();
 }
 
 function deleteRow(icon){
     icon.parentElement.remove();
 
-   
     renumberRows();
 }
 
 function updateRecipe(){
     window.location.href = "my-recipe.html";
 }
-
 
 function renumberRows(){
     // Ingredients
@@ -69,7 +65,39 @@ function renumberRows(){
     }
 }
 
+/* =========================
+   On load (renumber + file type checks)
+========================= */
 
 window.onload = function(){
+    // يبقي الترقيم شغال
     renumberRows();
+
+    // Change Photo: لازم صورة فقط (وهو اختياري)
+    var photoInput = document.getElementById("photoFile");
+    if(photoInput){
+        photoInput.onchange = function(){
+            if(photoInput.files && photoInput.files.length > 0){
+                var f = photoInput.files[0];
+                if(!f.type.startsWith("image/")){
+                    alert("Photo field accepts image files only.");
+                    photoInput.value = "";
+                }
+            }
+        };
+    }
+
+    // Upload Video: لازم فيديو فقط (وهو اختياري)
+    var videoInput = document.getElementById("videoFile");
+    if(videoInput){
+        videoInput.onchange = function(){
+            if(videoInput.files && videoInput.files.length > 0){
+                var f2 = videoInput.files[0];
+                if(!f2.type.startsWith("video/")){
+                    alert("Video field accepts video files only.");
+                    videoInput.value = "";
+                }
+            }
+        };
+    }
 };
