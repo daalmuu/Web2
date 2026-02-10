@@ -33,17 +33,17 @@
 <h2>Edit Recipe</h2>
 
 <label>Recipe Name</label>
-<input type="text" value="low-Calories Tiramisu">
+<input id="recipeName" type="text" value="low-Calories Tiramisu">
 
 <label>Category</label>
-<select>
+<select id="category">
   <option>Appetizers</option>
   <option>Main Course</option>
   <option selected>Dessert</option>
 </select>
 
 <label>Description</label>
-<textarea>A light and healthy low-calorie tiramisu, made with creamy Greek yogurt, finely ground oats, strong black coffee, and a touch of natural honey. Perfect for anyone looking for a guilt-free dessert, and ideal for a light treat or after-meal sweet.</textarea>
+<textarea id="description">A light and healthy low-calorie tiramisu, made with creamy Greek yogurt, finely ground oats, strong black coffee, and a touch of natural honey. Perfect for anyone looking for a guilt-free dessert, and ideal for a light treat or after-meal sweet.</textarea>
 
 <label>Recipe Photo</label>
 <div class="media-box">
@@ -70,33 +70,28 @@
     <input class="ing-name" type="text" value="Rolled Oats (finely ground)">
     <input class="ing-qty" type="text" value="¾ cup">
     <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-	
-	</div>
-	
-	<div class="ingredient-row">
+  </div>
+
+  <div class="ingredient-row">
     <span class="ing-num">3.</span>
     <input class="ing-name" type="text" value="Strong Black Coffee (cooled)">
     <input class="ing-qty" type="text" value="½ cup">
     <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
   </div>
-	
-	<div class="ingredient-row">
+
+  <div class="ingredient-row">
     <span class="ing-num">4.</span>
     <input class="ing-name" type="text" value="Raw Honey or Maple Syrup">
     <input class="ing-qty" type="text" value=" 2 tablespoons">
     <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
   </div>
-	
-	
-	<div class="ingredient-row">
+
+  <div class="ingredient-row">
     <span class="ing-num">5.</span>
-    <input class="ing-name" type="text" value="Unsweetened Cocoa Powder">
+    <input class="inging-name" type="text" value="Unsweetened Cocoa Powder">
     <input class="ing-qty" type="text" value="1 tablespoon">
     <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
   </div>
-	
-	
-
 
 </div>
 
@@ -118,34 +113,24 @@
     <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
   </div>
 
-
-
-<div class="step-row">
+  <div class="step-row">
     <span class="step-num">3</span>
-    <input type="text" value="Mix the Greek yogurt and honey in a bowl until smooth and creamy.">
+
+	  <input type="text" value="Mix the Greek yogurt and honey in a bowl until smooth and creamy.">
     <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
   </div>
 
-
-
-
-<div class="step-row">
+  <div class="step-row">
     <span class="step-num">4</span>
     <input type="text" value="Dip the ground oats lightly into the coffee, then layer them in a serving dish.">
     <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
   </div>
 
-
-
-
-<div class="step-row">
+  <div class="step-row">
     <span class="step-num">5</span>
     <input type="text" value="Spread the yogurt mixture on top, repeat the layers, and finish with a light dusting of cocoa powder.">
     <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
   </div>
-
-
-
 
 </div>
 
@@ -161,15 +146,11 @@
 </div>
 
 <label>Update Video URL</label>
-<input type="url" value="https://youtube.com/shorts/ehc0VgZcQkk?si=wY_eMo_NtCvfjldF">
+<input id="videoUrl" type="url" value="https://youtube.com/shorts/ehc0VgZcQkk?si=wY_eMo_NtCvfjldF">
 
 <label>Or Upload New Video</label>
 <input id="videoFile" name="videoFile" type="file" accept="video/*">
 
-
-
-
-	
 <div class="buttons">
   <button type="button" onclick="window.location='my-recipe.html'">Cancel</button>
   <button type="submit">Update Recipe</button>
