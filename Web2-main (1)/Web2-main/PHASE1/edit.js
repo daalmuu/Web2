@@ -1,3 +1,6 @@
+var photoRemoved = false;
+
+
 function addIngredient(){
     let container = document.getElementById("ingredients");
 
@@ -166,6 +169,25 @@ function renumberRows(){
         }
     }
 }
+
+
+
+
+function removePhoto(){
+    var img = document.getElementById("currentPhoto");
+    img.style.display = "none";   
+    photoRemoved = true;         
+}
+
+
+var photoInput = document.getElementById("photoFile");
+
+if (photoRemoved && (!photoInput.files || photoInput.files.length === 0)) {
+    errors.push("• Please upload a new photo after deleting the current one.");
+}
+
+
+
 
 /* =========================
    On load (renumber + file type checks)
