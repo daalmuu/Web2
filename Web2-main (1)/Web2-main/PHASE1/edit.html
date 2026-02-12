@@ -1,172 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>BellaCucina|Edit Recipe</title>
+  <meta charset="UTF-8">
+  <title>BellaCucina | Edit Recipe</title>
 
-<link rel="stylesheet" href="main.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 <header>
-    <div class="header-container">
-          <a href="User-dashboard.html"><img src="images\logo.png" alt="BellaCucina Logo" class="logo"></a>
+  <div class="header-container">
+    <a href="User-dashboard.html">
+      <img src="images/logo.png" alt="BellaCucina Logo" class="logo">
+    </a>
 
-        <nav class="nav-menu">
-            <a href="index.html" class="logout-link">
-                    <span class="icon">
-                        <span class="bracket"></span>
-                        <span class="arrow">➜</span>
-                    </span>
-                    <span class="text">Sign out</span>
-                </a>
-        </nav>
-    </div>
+    <nav class="nav-menu">
+      <a href="index.html" class="logout-link">
+        <span class="icon">
+          <span class="bracket"></span>
+          <span class="arrow">➜</span>
+        </span>
+        <span class="text">Sign out</span>
+      </a>
+    </nav>
+  </div>
 </header>
-
 
 <div class="container">
 
-<form id="editForm" onsubmit="updateRecipe(); return false;">
+  <form id="editForm">
+    <h2>Edit Recipe</h2>
 
-<h2>Edit Recipe</h2>
+    <label>Recipe Name</label>
+    <input id="recipeName" type="text" value="low-Calories Tiramisu">
 
-<label>Recipe Name</label>
-<input id="recipeName" type="text" value="low-Calories Tiramisu">
+    <label>Category</label>
+    <select id="category">
+      <option>Appetizers</option>
+      <option>Main Course</option>
+      <option selected>Dessert</option>
+    </select>
 
-<label>Category</label>
-<select id="category">
-  <option>Appetizers</option>
-  <option>Main Course</option>
-  <option selected>Dessert</option>
-</select>
+    <label>Description</label>
+    <textarea id="description">A light and healthy low-calorie tiramisu, made with creamy Greek yogurt, finely ground oats, strong black coffee, and a touch of natural honey. Perfect for anyone looking for a guilt-free dessert, and ideal for a light treat or after-meal sweet.</textarea>
 
-<label>Description</label>
-<textarea id="description">A light and healthy low-calorie tiramisu, made with creamy Greek yogurt, finely ground oats, strong black coffee, and a touch of natural honey. Perfect for anyone looking for a guilt-free dessert, and ideal for a light treat or after-meal sweet.</textarea>
+    <!-- PHOTO -->
+    <label>Recipe Photo</label>
+    <div class="media-box" id="photoBox">
+      <span class="badge">Current</span>
 
-<label>Recipe Photo</label>
-<div class="media-box">
-  <span class="badge">Current</span>
-  <img id="currentPhoto" src="images/Tir.webp" alt="recipe photo">
-  <button type="button" onclick="removePhoto()">Delete Photo</button>
-</div>
+      <img id="currentPhoto" src="images/Tir.webp" alt="recipe photo">
 
-<label>Change Photo</label>
-<input id="photoFile" type="file" accept="image/*">
+      <!-- delete icon same style as ingredients/steps -->
+      <span class="delete" role="button" tabindex="0" onclick="removePhoto()" aria-label="Delete photo">
+        <i class="fa-solid fa-trash"></i>
+      </span>
+    </div>
 
-<!-- INGREDIENTS -->
-<label>Ingredients</label>
-<div id="ingredients">
+    <label>Change Photo</label>
+    <input id="photoFile" type="file" accept="image/*">
 
-  <div class="ingredient-row">
-    <span class="ing-num">1.</span>
-    <input class="ing-name" type="text" value="Plain Greek Yogurt (0–2% fat)">
-    <input class="ing-qty" type="text" value="1½ cups">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+    <!-- INGREDIENTS -->
+    <label>Ingredients</label>
+    <div id="ingredients">
 
-  <div class="ingredient-row">
-    <span class="ing-num">2.</span>
-    <input class="ing-name" type="text" value="Rolled Oats (finely ground)">
-    <input class="ing-qty" type="text" value="¾ cup">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+      <div class="ingredient-row">
+        <span class="ing-num">1.</span>
+        <input class="ing-name" type="text" value="Plain Greek Yogurt (0–2% fat)">
+        <input class="ing-qty" type="text" value="1½ cups">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-  <div class="ingredient-row">
-    <span class="ing-num">3.</span>
-    <input class="ing-name" type="text" value="Strong Black Coffee (cooled)">
-    <input class="ing-qty" type="text" value="½ cup">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+      <div class="ingredient-row">
+        <span class="ing-num">2.</span>
+        <input class="ing-name" type="text" value="Rolled Oats (finely ground)">
+        <input class="ing-qty" type="text" value="¾ cup">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-  <div class="ingredient-row">
-    <span class="ing-num">4.</span>
-    <input class="ing-name" type="text" value="Raw Honey or Maple Syrup">
-    <input class="ing-qty" type="text" value=" 2 tablespoons">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+      <div class="ingredient-row">
+        <span class="ing-num">3.</span>
+        <input class="ing-name" type="text" value="Strong Black Coffee (cooled)">
+        <input class="ing-qty" type="text" value="½ cup">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-  <div class="ingredient-row">
-    <span class="ing-num">5.</span>
-    <input class="inging-name" type="text" value="Unsweetened Cocoa Powder">
-    <input class="ing-qty" type="text" value="1 tablespoon">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+      <div class="ingredient-row">
+        <span class="ing-num">4.</span>
+        <input class="ing-name" type="text" value="Raw Honey or Maple Syrup">
+        <input class="ing-qty" type="text" value="2 tablespoons">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-</div>
+      <div class="ingredient-row">
+        <span class="ing-num">5.</span>
+        <input class="ing-name" type="text" value="Unsweetened Cocoa Powder">
+        <input class="ing-qty" type="text" value="1 tablespoon">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-<button type="button" class="add-btn" onclick="addIngredient()">+ Add Ingredient</button>
+    </div>
 
-<!-- STEPS -->
-<label>Instructions</label>
-<div id="steps">
+    <button type="button" class="add-btn" onclick="addIngredient()">+ Add Ingredient</button>
 
-  <div class="step-row">
-    <span class="step-num">1</span>
-    <input type="text" value="Grind the oats into a fine powder using a blender or food processor.">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+    <!-- STEPS -->
+    <label>Instructions</label>
+    <div id="steps">
 
-  <div class="step-row">
-    <span class="step-num">2</span>
-    <input type="text" value="Brew the coffee and let it cool completely">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+      <div class="step-row">
+        <span class="step-num">1</span>
+        <input type="text" value="Grind the oats into a fine powder using a blender or food processor.">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-  <div class="step-row">
-    <span class="step-num">3</span>
+      <div class="step-row">
+        <span class="step-num">2</span>
+        <input type="text" value="Brew the coffee and let it cool completely.">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-	  <input type="text" value="Mix the Greek yogurt and honey in a bowl until smooth and creamy.">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+      <div class="step-row">
+        <span class="step-num">3</span>
+        <input type="text" value="Mix the Greek yogurt and honey in a bowl until smooth and creamy.">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-  <div class="step-row">
-    <span class="step-num">4</span>
-    <input type="text" value="Dip the ground oats lightly into the coffee, then layer them in a serving dish.">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+      <div class="step-row">
+        <span class="step-num">4</span>
+        <input type="text" value="Dip the ground oats lightly into the coffee, then layer them in a serving dish.">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-  <div class="step-row">
-    <span class="step-num">5</span>
-    <input type="text" value="Spread the yogurt mixture on top, repeat the layers, and finish with a light dusting of cocoa powder.">
-    <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
-  </div>
+      <div class="step-row">
+        <span class="step-num">5</span>
+        <input type="text" value="Spread the yogurt mixture on top, repeat the layers, and finish with a light dusting of cocoa powder.">
+        <span class="delete" onclick="deleteRow(this)"><i class="fa-solid fa-trash"></i></span>
+      </div>
 
-</div>
+    </div>
 
-<button type="button" class="add-btn" onclick="addStep()">+ Add Step</button>
+    <button type="button" class="add-btn" onclick="addStep()">+ Add Step</button>
 
-<!-- VIDEO -->
-<label>Recipe Video</label>
-<div class="media-box">
-  <span class="badge">Current</span>
-  <img id="currentPhoto" src="images/Tir.webp" alt="recipe photo">
-  <button type="button" class="delete-photo-btn" onclick="removePhoto()">
-    <i class="fa-solid fa-trash"></i> Remove
-  </button>
-</div>
+    <!-- VIDEO (no duplicate id now) -->
+    <label>Recipe Video</label>
+    <div class="media-box">
+      <span class="badge">Current</span>
+      <div class="video-preview">
+        Current video is set (URL below).
+      </div>
+    </div>
 
+    <label>Update Video URL</label>
+    <input id="videoUrl" type="url" value="https://youtube.com/shorts/ehc0VgZcQkk?si=wY_eMo_NtCvfjldF">
 
-<label>Update Video URL</label>
-<input id="videoUrl" type="url" value="https://youtube.com/shorts/ehc0VgZcQkk?si=wY_eMo_NtCvfjldF">
+    <label>Or Upload New Video</label>
+    <input id="videoFile" name="videoFile" type="file" accept="video/*">
 
-<label>Or Upload New Video</label>
-<input id="videoFile" name="videoFile" type="file" accept="video/*">
+    <div class="buttons">
+      <button type="button" onclick="window.location='my-recipe.html'">Cancel</button>
+      <button type="submit">Update Recipe</button>
+    </div>
 
-<div class="buttons">
-  <button type="button" onclick="window.location='my-recipe.html'">Cancel</button>
-  <button type="submit">Update Recipe</button>
-</div>
+  </form>
 
-</form>
 </div>
 
 <footer>
-    © 2026 BellaCucina. All rights reserved.
+  © 2026 BellaCucina. All rights reserved.
 </footer>
 
 <script src="edit.js"></script>
-
 </body>
 </html>
