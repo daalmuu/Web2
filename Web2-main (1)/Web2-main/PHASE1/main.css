@@ -1007,8 +1007,10 @@ button:hover{
 /* MEDIA */
 .media-box{
   position:relative;
-  display:inline-block;
+  display:flex;
   margin:10px 0 25px;
+ align-items:center;
+	
 }
 
 .media-box img,
@@ -1521,6 +1523,7 @@ button:hover{
 }
 
     
+
 
 
 
