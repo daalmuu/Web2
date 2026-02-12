@@ -142,14 +142,14 @@
 
     <button type="button" class="add-btn" onclick="addStep()">+ Add Step</button>
 
-    <!-- VIDEO (no duplicate id now) -->
-    <label>Recipe Video</label>
-    <div class="media-box">
-      <span class="badge">Current</span>
-      <div class="video-preview">
-        Current video is set (URL below).
-      </div>
-    </div>
+    
+   <label>Recipe Video</label>
+<div class="media-box">
+  <span class="badge">Current</span>
+  <video class="resp" controls>
+    <source src="images\recipe.mp4" type="video/mp4">
+  </video>
+</div>
 
     <label>Update Video URL</label>
     <input id="videoUrl" type="url" value="https://youtube.com/shorts/ehc0VgZcQkk?si=wY_eMo_NtCvfjldF">
