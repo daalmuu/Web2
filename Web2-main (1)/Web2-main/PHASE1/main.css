@@ -1014,6 +1014,11 @@ button:hover{
 	
 }
 
+.media-box .delete{
+  margin-left: auto;   
+}
+
+
 .media-box img,
 .media-box video{
 
@@ -1525,6 +1530,7 @@ button:hover{
 }
 
     
+
 
 
 
