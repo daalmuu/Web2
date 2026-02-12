@@ -141,10 +141,12 @@
 <label>Recipe Video</label>
 <div class="media-box">
   <span class="badge">Current</span>
-  <video class="resp" controls>
-    <source src="images/recipe.mp4" type="video/mp4">
-  </video>
+  <img id="currentPhoto" src="images/Tir.webp" alt="recipe photo">
+  <button type="button" class="delete-photo-btn" onclick="removePhoto()">
+    <i class="fa-solid fa-trash"></i> Remove
+  </button>
 </div>
+
 
 <label>Update Video URL</label>
 <input id="videoUrl" type="url" value="https://youtube.com/shorts/ehc0VgZcQkk?si=wY_eMo_NtCvfjldF">
