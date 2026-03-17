@@ -27,6 +27,13 @@ if (!is_dir($upload_dir)) {
 
 $photo_path = $oldphoto;
 if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0 && $_FILES['photo']['name'] !== '') {
+    $allowed_image_types = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+    $photo_type = mime_content_type($_FILES['photo']['tmp_name']);
+
+    if (!in_array($photo_type, $allowed_image_types)) {
+        die("invalid photo file type. only image files are allowed.");
+    }
+
     $photo_name = time() . "_" . basename($_FILES['photo']['name']);
     $photo_path = $upload_dir . $photo_name;
 
@@ -37,6 +44,13 @@ if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0 && $_FILES['photo
 
 $video_path = $oldvideo;
 if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video']['name'] !== '') {
+    $allowed_video_types = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
+    $video_type = mime_content_type($_FILES['video']['tmp_name']);
+
+    if (!in_array($video_type, $allowed_video_types)) {
+        die("invalid video file type. only video files are allowed.");
+    }
+
     $video_name = time() . "_" . basename($_FILES['video']['name']);
     $video_path = $upload_dir . $video_name;
 
