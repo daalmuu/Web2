@@ -77,9 +77,10 @@ if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video
     } elseif (!in_array($video_ext, $allowed_videos)) {
         $errors[] = "Invalid video extension. Supported: " . implode(', ', $allowed_videos);
     } else {
-        $video_name = time() . "_" . basename($_FILES['video']['name']);
-        $full_video_destination = $upload_dir . $video_name; // المسار للرفع (uploads/name.mp4)
-
+       $video_name = time() . "_" . basename($_FILES['video']['name']);
+        
+    $full_video_destination = $upload_dir . $video_name;
+    
         if (move_uploaded_file($tmp_video, $full_video_destination)) {
             $video_path = $video_name; // هنا المهم: نخزن الاسم فقط للداتابيز (name.mp4)
         } else {
