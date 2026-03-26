@@ -71,9 +71,25 @@ if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video
     if (strpos($video_mime, 'video/') !== 0 || $is_image !== false) {
         $errors[] = "Security Error: The video field must contain a video file, not an image.";
     } else {
-        $video_path =  time() . "_" . basename($_FILES['video']['name']);
+        // 1. تجهيز الاسم الجديد
+        $new_video_name = time() . "_" . basename($_FILES['video']['name']);
+        
+        // 2. سطر الرفع (هذا اللي كان ناقصك وهو أهم سطر)
+        if (move_uploaded_file($tmp_video, "uploads/" . $new_video_name)) {
+            $video_path = $new_video_name; // نحدث المتغير عشان يروح للداتابيز
+        } else {
+            $errors[] = "Failed to move uploaded video.";
+        }
     }
 }
+
+
+
+
+
+
+
+
 
 /* ====== 4. عرض الأخطاء إن وجدت (التصميم الجميل) ====== */
 if (!empty($errors)) {
@@ -85,11 +101,6 @@ if (!empty($errors)) {
 }
 
 /* ====== 5. تنفيذ الرفع الفعلي للملفات ====== */
-if ($photo_path !== $oldphoto) {
-    if (move_uploaded_file($_FILES['photo']['tmp_name'], $photo_path)) {
-        if (!empty($oldphoto) && file_exists($oldphoto)) @unlink($oldphoto);
-    }
-}
 
 if ($video_path !== $oldvideo) {
     if (move_uploaded_file($_FILES['video']['tmp_name'], $video_path)) {
