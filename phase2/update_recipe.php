@@ -165,7 +165,7 @@ while ($row = mysqli_fetch_assoc($instruction_result)) {
         <?php if (!empty($recipe['videofilepath'])) { ?>
             <div class="media-box">
                 <video width="250" controls>
-                    <source src="<?= htmlspecialchars($recipe['videofilepath']); ?>">
+                    <source src="uploads/<?= htmlspecialchars($recipe['videofilepath']); ?>">
                     Your browser does not support the video tag.
                 </video>
             </div>
