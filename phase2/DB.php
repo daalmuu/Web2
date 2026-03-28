@@ -1,14 +1,7 @@
 <?php
-$host = "localhost";
-$username = "root";
-$password = "";
-$database = "bellacucina_db";
+$conn = new mysqli("localhost", "root", "root", "bellacucina_db", 8889);
 
-$conn = mysqli_connect($host, $username, $password, $database);
-
-if (!$conn) {
-    die("connection failed: " . mysqli_connect_error());
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
-
-mysqli_set_charset($conn, "utf8");
 ?>
