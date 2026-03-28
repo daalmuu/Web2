@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include 'DB.php';
 
 $category_query = "select id, categoryname from recipecategory order by categoryname asc";
 $category_result = mysqli_query($conn, $category_query);
