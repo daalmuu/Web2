@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include 'DB.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     die("invalid recipe id.");
