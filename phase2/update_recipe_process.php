@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include 'DB.php';
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: my-recipe.php");
