@@ -1,5 +1,5 @@
 <?php
-include 'DB.php';
+include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: my-recipe.php");
@@ -83,10 +83,38 @@ if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video
     }
 }
 
+// ====== دعم خيار إدخال رابط فيديو بدلاً من رفع ملف ======
+if (
+    (!isset($_FILES['video']) || $_FILES['video']['error'] == 4) &&
+    !empty($_POST['video_url']) &&
+    filter_var($_POST['video_url'], FILTER_VALIDATE_URL)
+) {
+    $url = trim($_POST['video_url']);
+    $allowed_hosts = ['youtube.com', 'youtu.be', 'vimeo.com', 'www.youtube.com', 'www.youtu.be', 'www.vimeo.com'];
+    $valid_extension = preg_match('/\.(mp4|webm|mov|avi)$/i', $url);
+    $parsed = parse_url($url);
+    $host = $parsed['host'] ?? '';
+
+    if ($valid_extension || preg_match('/youtube\.com|youtu\.be|vimeo\.com/i', $host)) {
+        $video_path = $url; // نخزّن الرابط نفسه في قاعدة البيانات
+    } else {
+        $errors[] = "Invalid video URL — must be from YouTube, Vimeo, or a direct .mp4/.webm/.mov/.avi link.";
+    }
+}
 
 
+if (
+    (empty($_FILES['video']['name']) || $_FILES['video']['error'] == 4) &&
+    empty($_POST['video_url'])
+) {
+    // المستخدم حذف الرابط وما رفع شيء جديد → نحذف الفيديو القديم
+    $video_path = ''; // نخليه فاضي
 
-
+    // نحذف الفيديو من مجلد uploads إذا كان ملف موجود
+    if (!empty($oldvideo) && file_exists("uploads/" . $oldvideo)) {
+        @unlink("uploads/" . $oldvideo);
+    }
+}
 
 
 
@@ -107,6 +135,20 @@ if ($video_path !== $oldvideo) {
         if (!empty($oldvideo) && file_exists($oldvideo)) @unlink($oldvideo);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ====== 6. تحديث قاعدة البيانات باستخدام Transaction ====== */
 mysqli_begin_transaction($conn);
