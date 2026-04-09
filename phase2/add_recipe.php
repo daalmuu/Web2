@@ -1,5 +1,5 @@
 <?php
-include 'DB.php';
+include 'db.php';
 
 $category_query = "select id, categoryname from recipecategory order by categoryname asc";
 $category_result = mysqli_query($conn, $category_query);
@@ -71,6 +71,8 @@ if (!$category_result) {
         <label>Upload Video</label>
         <input name="video" type="file" accept="video/*">
 
+<label>Or provide video URL (YouTube / MP4)</label>
+<input type="url" name="video_url" placeholder="[example.com](https://example.com/video.mp4)">
         <div class="buttons">
             <button type="submit">Add Recipe</button>
         </div>
