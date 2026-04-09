@@ -1,5 +1,5 @@
 <?php
-include 'DB.php';
+include 'db.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     die("invalid recipe id.");
@@ -160,20 +160,56 @@ while ($row = mysqli_fetch_assoc($instruction_result)) {
         </div>
 
         <button class="add-btn" type="button" onclick="addStep()">+ Add Step</button>
-
+<!--
         <label>Current Video</label>
-        <?php if (!empty($recipe['videofilepath'])) { ?>
+        <?<php if (!empty($recipe['videofilepath'])) { ?>
             <div class="media-box">
                 <video width="250" controls>
-                    <source src="uploads/<?= htmlspecialchars($recipe['videofilepath']); ?>">
+                    <source src="uploads/<,?= htmlspecialchars($recipe['videofilepath']); ?>">
                     Your browser does not support the video tag.
                 </video>
             </div>
-        <?php } ?>
+        <,?php } ?>
+-->
+
+
+<label>Current Video</label>
+<?php if (!empty($recipe['videofilepath'])): ?>
+    <div class="media-box">
+        <?php
+        // لو الفيديو رابط خارجي (يبدأ بـ http)
+        if (filter_var($recipe['videofilepath'], FILTER_VALIDATE_URL)) {
+            // ✅ عرض المقطع داخل iframe بدلاً من <video>
+            echo '<iframe width="250" height="150"
+                          src="' . htmlspecialchars($recipe['videofilepath']) . '"
+                          frameborder="0" allowfullscreen></iframe>';
+        } else {
+            // 🎥 فيديو محلي من مجلد uploads/
+            echo '<video width="250" controls>
+                    <source src="uploads/' . htmlspecialchars($recipe['videofilepath']) . '">
+                  </video>';
+        }
+        ?>
+    </div>
+<?php endif; ?>
+
+
+
+
+
+
+
+
 
         <label>Upload New Video</label>
         <input type="file" name="video" accept="video/*">
-
+<input type="url" name="video_url"
+       placeholder="[example.com](https://example.com/video.mp4)"
+       value="<?php
+if (filter_var($recipe['videofilepath'], FILTER_VALIDATE_URL)) {
+    echo htmlspecialchars($recipe['videofilepath']);
+}
+?>">
         <div class="buttons">
             <button type="submit">Update Recipe</button>
         </div>
