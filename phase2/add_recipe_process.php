@@ -1,6 +1,6 @@
 <?php
 session_start(); 
-include 'DB.php'; 
+include 'db.php'; 
 
 $userid = $_SESSION['userid']?? 1; 
 
@@ -90,6 +90,30 @@ if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video
     
    
 }
+
+// ====== دعم خيار إدخال رابط فيديو بدلاً من رفع ملف ======
+if (
+    (!isset($_FILES['video']) || $_FILES['video']['error'] == 4) &&
+    !empty($_POST['video_url']) &&
+    filter_var($_POST['video_url'], FILTER_VALIDATE_URL)
+) {
+    $url = trim($_POST['video_url']);
+    $allowed_hosts = ['youtube.com', 'youtu.be', 'vimeo.com', 'www.youtube.com', 'www.youtu.be', 'www.vimeo.com'];
+    $valid_extension = preg_match('/\.(mp4|webm|mov|avi)$/i', $url);
+    $parsed = parse_url($url);
+    $host = $parsed['host'] ?? '';
+
+    if ($valid_extension || preg_match('/youtube\.com|youtu\.be|vimeo\.com/i', $host)) {
+        $video_path = $url; // نحفظ الرابط نفسه في قاعدة البيانات
+    } else {
+        $errors[] = "Invalid video URL — must be from YouTube, Vimeo, or a direct .mp4/.webm/.mov/.avi link.";
+    }
+}
+
+
+
+
+
 
 /* ====== 4. DISPLAY ALL ERRORS IF ANY ====== */
 if (!empty($errors)) {
