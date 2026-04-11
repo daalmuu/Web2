@@ -83,6 +83,16 @@ if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video
     }
 }
 
+
+
+
+
+
+   
+
+
+
+
 // ====== دعم خيار إدخال رابط فيديو بدلاً من رفع ملف ======
 if (
     (!isset($_FILES['video']) || $_FILES['video']['error'] == 4) &&
@@ -103,7 +113,7 @@ if (
 }
 
 
-if (
+/*if (
     (empty($_FILES['video']['name']) || $_FILES['video']['error'] == 4) &&
     empty($_POST['video_url'])
 ) {
@@ -111,10 +121,33 @@ if (
     $video_path = ''; // نخليه فاضي
 
     // نحذف الفيديو من مجلد uploads إذا كان ملف موجود
+    //if (!empty($oldvideo) && file_exists("uploads/" . $oldvideo)) {
+     //   @unlink("uploads/" . $oldvideo);
+    //}
+}
+
+*/
+
+
+// ====== منطق الحذف الذكي: يحذف فقط إذا كان المستخدم "مسح" الرابط يدوياً ======
+if (
+    isset($_POST['video_url']) &&             // التأكد أن حقل الرابط أُرسل من الفورم
+    trim($_POST['video_url']) === '' &&       // التأكد أن المستخدم مسح الرابط وجعل الخانة فارغة
+    (empty($_FILES['video']['name']) || $_FILES['video']['error'] == 4) // والتأكد أنه لم يرفع ملفاً جديداً
+) {
+    // هنا فقط نقوم بتصفير المسار وحذف الملف
+    $video_path = ''; 
+
     if (!empty($oldvideo) && file_exists("uploads/" . $oldvideo)) {
         @unlink("uploads/" . $oldvideo);
     }
 }
+
+
+
+
+
+
 
 
 
@@ -130,12 +163,12 @@ if (!empty($errors)) {
 
 /* ====== 5. تنفيذ الرفع الفعلي للملفات ====== */
 
-if ($video_path !== $oldvideo) {
+/*if ($video_path !== $oldvideo) {
     if (move_uploaded_file($_FILES['video']['tmp_name'], $video_path)) {
         if (!empty($oldvideo) && file_exists($oldvideo)) @unlink($oldvideo);
     }
 }
-
+*/
 
 
 
@@ -197,3 +230,4 @@ try {
     die("Database Error: " . $e->getMessage());
 }
 ?>
+
