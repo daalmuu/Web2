@@ -2,15 +2,14 @@
 include("session.php");
 include("DB.php");
 
-if ($_SESSION['userType'] != "user") {
-    header("Location: login.php");
+if ($_SESSION['usertype'] != "user") {
+    header("Location: login.php?error=Access+denied");
     exit();
 }
 
-$userID = $_SESSION['userID'];
-$result = $conn->query("SELECT * FROM Recipe WHERE userID = $userID");
+$userID = $_SESSION['userid'];
+$result = $conn->query("SELECT * FROM recipe WHERE userid = $userID");
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +19,6 @@ $result = $conn->query("SELECT * FROM Recipe WHERE userID = $userID");
 </head>
 <body>
 
-<!-- ===== Header ===== -->
 <header>
     <div class="header-container">
         <a href="User-dashboard.php">
@@ -38,24 +36,20 @@ $result = $conn->query("SELECT * FROM Recipe WHERE userID = $userID");
     </div>
 </header>
 
-<!-- ===== Page Content ===== -->
 <main class="dashboard-page fade-in">
 
-    <!-- Page Title -->
     <div class="welcome-banner">
         <span class="welcome-label">My Kitchen</span>
         <h1>📋 My Recipes</h1>
         <p>Manage and edit your added recipes</p>
     </div>
 
-    <!-- Add Recipe Button -->
     <div class="add-recipe-bar">
         <a href="add.php" class="btn-green">➕ Add New Recipe</a>
     </div>
 
 <?php if ($result->num_rows > 0): ?>
 
-    <!-- ===== Recipes Table ===== -->
     <section class="table-section">
         <table class="data-table">
             <thead>
@@ -75,33 +69,29 @@ $result = $conn->query("SELECT * FROM Recipe WHERE userID = $userID");
 
                 <?php
                     $recipeID     = $row['id'];
-                    $likes        = $conn->query("SELECT COUNT(*) as total FROM Likes WHERE recipeID=$recipeID")->fetch_assoc()['total'];
-                    $ingredients  = $conn->query("SELECT * FROM Ingredients WHERE recipeID=$recipeID");
-                    $instructions = $conn->query("SELECT * FROM Instructions WHERE recipeID=$recipeID ORDER BY stepOrder");
+                    $likes        = $conn->query("SELECT COUNT(*) as total FROM likes WHERE recipeid=$recipeID")->fetch_assoc()['total'];
+                    $ingredients  = $conn->query("SELECT * FROM ingredients WHERE recipeid=$recipeID");
+                    $instructions = $conn->query("SELECT * FROM instructions WHERE recipeid=$recipeID ORDER BY steporder");
                 ?>
 
                 <tr>
-
-                    <!-- Recipe name + photo -->
                     <td>
                         <a href="view.php?id=<?=$recipeID?>">
                             <div class="recipe-cell">
-                                <img src="images/<?=$row['photoFileName']?>" class="table-img">
+                                <img src="images/<?=$row['photofilename']?>" class="table-img">
                                 <span><?=$row['name']?></span>
                             </div>
                         </a>
                     </td>
 
-                    <!-- Ingredients -->
                     <td>
                         <ul class="small-list">
                             <?php while($ing = $ingredients->fetch_assoc()): ?>
-                                <li><?=$ing['ingredientName']?> – <?=$ing['ingredientQuantity']?></li>
+                                <li><?=$ing['ingredientname']?> – <?=$ing['ingredientquantity']?></li>
                             <?php endwhile; ?>
                         </ul>
                     </td>
 
-                    <!-- Instructions -->
                     <td>
                         <ol class="inst-list">
                             <?php while($inst = $instructions->fetch_assoc()): ?>
@@ -110,31 +100,26 @@ $result = $conn->query("SELECT * FROM Recipe WHERE userID = $userID");
                         </ol>
                     </td>
 
-                    <!-- Video -->
                     <td>
-                        <a href="<?=$row['videoFilePath']?>" target="_blank" class="video-link">
+                        <a href="<?=$row['videofilepath']?>" target="_blank" class="video-link">
                             Watch Video
                         </a>
                     </td>
 
-                    <!-- Likes -->
                     <td>
                         <span class="likes-badge">👍 <?=$likes?></span>
                     </td>
 
-                    <!-- Edit -->
                     <td>
                         <a href="edit.php?id=<?=$recipeID?>" class="btn-icon edit">Edit</a>
                     </td>
 
-                    <!-- Delete -->
                     <td>
                         <a href="delete.php?id=<?=$recipeID?>" class="btn-icon delete"
                            onclick="return confirm('Are you sure you want to delete this recipe?')">
                             Delete
                         </a>
                     </td>
-
                 </tr>
 
             <?php endwhile; ?>
@@ -157,7 +142,6 @@ $result = $conn->query("SELECT * FROM Recipe WHERE userID = $userID");
 
 </main>
 
-<!-- ===== Footer ===== -->
 <footer>
     © 2026 BellaCucina. All rights reserved.
 </footer>
