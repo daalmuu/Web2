@@ -203,13 +203,22 @@ while ($row = mysqli_fetch_assoc($instruction_result)) {
 
         <label>Upload New Video</label>
         <input type="file" name="video" accept="video/*">
-<input type="url" name="video_url"
-       placeholder="[example.com](https://example.com/video.mp4)"
-       value="<?php
-if (filter_var($recipe['videofilepath'], FILTER_VALIDATE_URL)) {
-    echo htmlspecialchars($recipe['videofilepath']);
-}
-?>">
+
+
+<label> Or provide video URL (YouTube / MP4)</label>
+
+<input type="text" name="video_url" 
+       placeholder="YouTube link or file name"
+       value="<?php echo htmlspecialchars($recipe['videofilepath']); ?>">
+
+
+
+
+
+
+
+
+
         <div class="buttons">
             <button type="submit">Update Recipe</button>
         </div>
@@ -219,3 +228,4 @@ if (filter_var($recipe['videofilepath'], FILTER_VALIDATE_URL)) {
 <script src="edit.js"></script>
 </body>
 </html>
+
