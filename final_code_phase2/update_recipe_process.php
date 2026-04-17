@@ -31,20 +31,39 @@ if ($description === '') $errors[] = "Description is required.";
 if ($categoryid <= 0)    $errors[] = "Please select a category.";
 
 /* ====== PHOTO VALIDATION ====== */
-$photo_path = $oldphoto;
+$photo_path = $oldphoto; // الافتراضي هو القديم
 if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0) {
-    $check = @getimagesize($_FILES['photo']['tmp_name']);
-    if ($check === false) {
-        $errors[] = "Invalid photo. Please upload a real image file.";
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $photo_mime = finfo_file($finfo, $_FILES['photo']['tmp_name']);
+    finfo_close($finfo);
+
+    $allowed_images = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+    if (!in_array($photo_mime, $allowed_images)) {
+        $errors[] = "Invalid photo type. Please upload a real image file.";
     } else {
+        //$photo_path = time() . "_" . basename($_FILES['photo']['name']);
+       
         $filename_only = $recipeid . "_" . time() . "_" . basename($_FILES['photo']['name']);
-        if (move_uploaded_file($_FILES['photo']['tmp_name'], $upload_dir . $filename_only)) {
-            $photo_path = $filename_only;
-        }
+$photo_path = "uploads/" . $filename_only;
+
+if (move_uploaded_file($_FILES['photo']['tmp_name'], $photo_path)) {
+    
+    
+    if (!empty($oldphoto) && file_exists("uploads/" . $oldphoto)) {
+        @unlink("uploads/" . $oldphoto); 
+    }
+    
+    
+    $photo_path = $filename_only; 
+}
+        
+        
+        
     }
 }
-
 /* ====== VIDEO VALIDATION ====== */
+
+
 $video_path = $oldvideo;
 if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video']['name'] !== '') {
     $tmp_video      = $_FILES['video']['tmp_name'];
@@ -59,6 +78,11 @@ if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video
     } else {
         $new_video_name = time() . "_" . basename($_FILES['video']['name']);
         if (move_uploaded_file($tmp_video, $upload_dir . $new_video_name)) {
+            
+            if (!empty($oldvideo) && file_exists($upload_dir . $oldvideo)) {
+                @unlink($upload_dir . $oldvideo);
+            }
+            
             $video_path = $new_video_name;
         } else {
             $errors[] = "Failed to move uploaded video.";
@@ -94,8 +118,14 @@ if (
     }
 }
 
+
+
 /* ====== SHOW ERRORS ====== */
 if (!empty($errors)) {
+    
+     if ($photo_path && file_exists("uploads/" . $photo_path)) {
+        @unlink("uploads/" . $photo_path);
+    }
     echo "<div style='color:#721c24;background:#f8d7da;border:1px solid #f5c6cb;padding:20px;margin:20px;font-family:Arial;border-radius:5px;'>";
     echo "<h3>Please fix the following errors:</h3><ul>";
     foreach ($errors as $error) echo "<li>" . htmlspecialchars($error) . "</li>";
