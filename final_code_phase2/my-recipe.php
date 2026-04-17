@@ -16,6 +16,13 @@ $result = $conn->query("SELECT * FROM recipe WHERE userid = $userID");
     <meta charset="UTF-8">
     <title>BellaCucina | My Recipes</title>
     <link rel="stylesheet" href="main.css">
+    <style>
+        .no-video {
+    color: #999;
+    font-style: italic;
+    font-size: 0.85rem;
+}
+    </style>
 </head>
 <body>
 
@@ -101,9 +108,13 @@ $result = $conn->query("SELECT * FROM recipe WHERE userid = $userID");
                     </td>
 
                     <td>
-                        <a href="<?=$row['videofilepath']?>" target="_blank" class="video-link">
-                            Watch Video
-                        </a>
+                        <?php if (!empty($row['videofilepath'])): ?>
+                            <a href="<?=$row['videofilepath']?>" target="_blank" class="video-link">
+                                Watch Video
+                            </a>
+                        <?php else: ?>
+                            <span class="no-video">No video for recipe</span>
+                        <?php endif; ?>
                     </td>
 
                     <td>
