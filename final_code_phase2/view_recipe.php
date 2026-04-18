@@ -120,19 +120,19 @@ $stmt->close();
         <div class="recipe-actions">
 
             <?php if ($already_favourited): ?>
-                <button class="action-btn favourite" disabled>❤ Favourite</button>
+                <button class="action-btn favourite" disabled style="opacity:0.45; filter:grayscale(60%);">❤ Favourite</button>
             <?php else: ?>
                 <a href="add_favourite.php?recipe_id=<?= $recipe_id ?>" class="action-btn favourite">❤ Favourite</a>
             <?php endif; ?>
 
             <?php if ($already_liked): ?>
-                <button class="action-btn like" disabled>👍 Like</button>
+                <button class="action-btn like" disabled style="opacity:0.45; filter:grayscale(60%);">👍 Like</button>
             <?php else: ?>
                 <a href="add_like.php?recipe_id=<?= $recipe_id ?>" class="action-btn like">👍 Like</a>
             <?php endif; ?>
 
             <?php if ($already_reported): ?>
-                <button class="action-btn report" disabled>🚩 Report</button>
+                <button class="action-btn report" disabled style="opacity:0.45; filter:grayscale(60%);">🚩 Report</button>
             <?php else: ?>
                 <a href="add_report.php?recipe_id=<?= $recipe_id ?>" class="action-btn report">🚩 Report</a>
             <?php endif; ?>
@@ -201,14 +201,64 @@ $stmt->close();
     <?php if (!empty($recipe['videofilepath'])): ?>
     <div class="video-box">
         <h2>Recipe Video</h2>
-        <a href="<?= htmlspecialchars($recipe['videofilepath']) ?>" target="_blank" class="video-link-box">
+        <div class="video-link-box" onclick="openVideoModal('<?= htmlspecialchars($recipe['videofilepath']) ?>')" style="cursor:pointer;">
             <div class="play-icon">▶</div>
             <div>
                 <div class="video-title">Watch recipe preparation</div>
-                <div class="video-subtitle">YouTube video</div>
+                <div class="video-subtitle">Click to play</div>
             </div>
-        </a>
+        </div>
     </div>
+
+    <!-- Video Modal -->
+    <div id="videoModal" onclick="closeVideoModal()" style="
+        display:none;
+        position:fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background:rgba(0,0,0,0.75);
+        z-index:9999;
+        align-items:center;
+        justify-content:center;
+    ">
+        <div style="
+            position:relative;
+            width:70%;
+            max-width:900px;
+            background:#000;
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 20px 60px rgba(0,0,0,0.5);
+        " onclick="event.stopPropagation()">
+            <video id="videoPlayer" controls style="width:100%; display:block; max-height:75vh;">
+                <source id="videoSource" src="" type="video/mp4">
+                متصفحك لا يدعم تشغيل الفيديو.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        function openVideoModal(src) {
+            if (src.startsWith('http://') || src.startsWith('https://')) {
+                window.open(src, '_blank');
+                return;
+            }
+            const modal  = document.getElementById('videoModal');
+            const player = document.getElementById('videoPlayer');
+            const source = document.getElementById('videoSource');
+            source.src = 'uploads/' + src.replace('uploads/', '');
+            player.load();
+            modal.style.display = 'flex';
+        }
+
+        function closeVideoModal() {
+            const modal  = document.getElementById('videoModal');
+            const player = document.getElementById('videoPlayer');
+            player.pause();
+            player.currentTime = 0;
+            modal.style.display = 'none';
+        }
+    </script>
     <?php endif; ?>
 
     <div class="comments-section">
