@@ -16,13 +16,6 @@ $result = $conn->query("SELECT * FROM recipe WHERE userid = $userID");
     <meta charset="UTF-8">
     <title>BellaCucina | My Recipes</title>
     <link rel="stylesheet" href="main.css">
-    <style>
-        .no-video {
-    color: #999;
-    font-style: italic;
-    font-size: 0.85rem;
-}
-    </style>
 </head>
 <body>
 
@@ -109,7 +102,7 @@ $result = $conn->query("SELECT * FROM recipe WHERE userid = $userID");
 
                     <td>
                         <?php if (!empty($row['videofilepath'])): ?>
-                            <a href="<?=$row['videofilepath']?>" target="_blank" class="video-link">
+                            <a class="video-link" onclick="openVideoModal('<?= htmlspecialchars($row['videofilepath']) ?>')" style="cursor:pointer;">
                                 Watch Video
                             </a>
                         <?php else: ?>
@@ -156,6 +149,56 @@ $result = $conn->query("SELECT * FROM recipe WHERE userid = $userID");
 <footer>
     © 2026 BellaCucina. All rights reserved.
 </footer>
+
+<!-- Video Modal -->
+<div id="videoModal" onclick="closeVideoModal()" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.75);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+">
+    <div style="
+        position:relative;
+        width:70%;
+        max-width:900px;
+        background:#000;
+        border-radius:12px;
+        overflow:hidden;
+        box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    " onclick="event.stopPropagation()">
+        <video id="videoPlayer" controls style="width:100%; display:block; max-height:75vh;">
+            <source id="videoSource" src="" type="video/mp4">
+            متصفحك لا يدعم تشغيل الفيديو.
+        </video>
+    </div>
+</div>
+
+<script>
+    function openVideoModal(src) {
+        if (src.startsWith('http://') || src.startsWith('https://')) {
+            window.open(src, '_blank');
+            return;
+        }
+        const modal  = document.getElementById('videoModal');
+        const player = document.getElementById('videoPlayer');
+        const source = document.getElementById('videoSource');
+        source.src = 'uploads/' + src.replace('uploads/', '');
+        player.load();
+        modal.style.display = 'flex';
+    }
+
+    function closeVideoModal() {
+        const modal  = document.getElementById('videoModal');
+        const player = document.getElementById('videoPlayer');
+        player.pause();
+        player.currentTime = 0;
+        modal.style.display = 'none';
+    }
+</script>
 
 </body>
 </html>
