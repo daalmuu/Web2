@@ -39,7 +39,7 @@ if (!empty($recipe['photofilename'])) {
 }
 
 if (!empty($recipe['videofilepath'])) {
-    $videoPath = $recipe['videofilepath'];
+    $videoPath = "uploads/" .$recipe['videofilepath'];
     if (file_exists($videoPath)) {
         unlink($videoPath);
     }
