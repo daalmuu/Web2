@@ -51,7 +51,7 @@ if ($show_buttons) {
     $already_liked = $s->get_result()->num_rows > 0;
     $s->close();
 
-    $s = $conn->prepare("SELECT 1 FROM report WHERE userid=? AND recipeid=?");
+    $s = $conn->prepare("SELECT 1 FROM report WHERE userid=? AND recipeid=? AND status='pending'");
     $s->bind_param("ii", $current_user_id, $recipe_id);
     $s->execute();
     $already_reported = $s->get_result()->num_rows > 0;
