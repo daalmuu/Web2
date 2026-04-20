@@ -1,6 +1,6 @@
 <?php
-include("session.php");
-include("DB.php");
+require_once("session.php");
+require_once("DB.php");
 
 if ($_SESSION['usertype'] != "user") {
     header("Location: login.php?error=Access+denied");
