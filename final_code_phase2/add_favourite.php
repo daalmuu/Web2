@@ -1,6 +1,6 @@
 <?php
-include('session.php');
-include('DB.php');
+require_once("session.php");
+require_once("DB.php");
 
 if (empty($_GET['recipe_id'])) {
     header("Location: User-dashboard.php");
