@@ -1,6 +1,6 @@
 <?php
-require_once("session.php");
-require_once("DB.php");
+require_once('session.php');
+require_once('DB.php');
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: User-dashboard.php");
@@ -95,15 +95,7 @@ $stmt->close();
     <div class="header-container">
  <a href="User-dashboard.php">
             <img src="uploads/logo.png" alt="BellaCucina Logo" class="logo">
-        </a>        <nav class="nav-menu">
-            <a href="logout.php" class="logout-link">
-                <span class="icon">
-                    <span class="bracket"></span>
-                    <span class="arrow">➜</span>
-                </span>
-                <span class="text">Sign out</span>
-            </a>
-        </nav>
+        </a>   
     </div>
 </header>
 
