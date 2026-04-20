@@ -24,16 +24,7 @@ $result = $conn->query("SELECT * FROM recipe WHERE userid = $userID");
         <a href="User-dashboard.php">
             <img src="uploads/logo.png" alt="BellaCucina Logo" class="logo">
         </a>
-        <nav class="nav-menu">
-            <a href="logout.php" class="logout-link">
-                <span class="icon">
-                    <span class="bracket"></span>
-                    <span class="arrow">➜</span>
-                </span>
-                <span class="text">Sign out</span>
-            </a>
-        </nav>
-    </div>
+        
 </header>
 
 <main class="dashboard-page fade-in">
