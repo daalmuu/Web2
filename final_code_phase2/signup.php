@@ -1,6 +1,6 @@
 <?php
-session_start();
-include("DB.php");
+session_start();       
+require_once "UserAuth.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -9,54 +9,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email     = trim($_POST['email']);
     $password  = trim($_POST['password']);
 
-    $stmt = $conn->prepare("SELECT id FROM user WHERE emailaddress = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
+    $auth = new UserAuth();
 
-    if ($stmt->num_rows > 0) {
-        $stmt->close();
+    if ($auth->emailExists($email)) {
         header("Location: signup.php?error=Email+is+already+registered");
         exit();
     }
-    $checkBlock = $conn->prepare("SELECT id FROM blockeduser WHERE emailaddress = ?");
-    $checkBlock->bind_param("s", $email);
-    $checkBlock->execute();
-    $blockResult = $checkBlock->get_result();
 
-    if ($blockResult->num_rows > 0) {
+    if ($auth->isBlocked($email)) {
         header("Location: signup.php?error=Your+account+has+been+blocked+by+Admin");
         exit();
     }
-    $stmt->close();
 
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $photoFileName = $auth->uploadProfilePhoto($_FILES['profile-photo'] ?? []);
 
-    $photoFileName = "default.png";
-
-    if (!empty($_FILES['profile-photo']['name'])) {
-        $tmpName   = $_FILES['profile-photo']['tmp_name'];
-        $origName  = basename($_FILES['profile-photo']['name']);
-        $extension = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
-        $newFileName = uniqid("user_", true) . "." . $extension;
-        $uploadPath  = "uploads/" . $newFileName;
-
-        if (move_uploaded_file($tmpName, $uploadPath)) {
-            $photoFileName = $newFileName;
-        }
-    }
-
-    $userType = "user";
-    $stmt = $conn->prepare("INSERT INTO user (firstname, lastname, emailaddress, password, photofilename, usertype)
-                            VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $photoFileName, $userType);
-    $stmt->execute();
-
-    $newUserID = $conn->insert_id;
-    $stmt->close();
+    $newUserID = $auth->registerUser($firstName, $lastName, $email, $password, $photoFileName);
 
     $_SESSION['userid']   = $newUserID;
-    $_SESSION['usertype'] = $userType;
+    $_SESSION['usertype'] = 'user';
 
     header("Location: User-dashboard.php");
     exit();
