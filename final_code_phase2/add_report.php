@@ -1,6 +1,6 @@
 <?php
-require_once("session.php");
-require_once("DB.php");
+include('session.php');
+include('DB.php');
 
 if (empty($_GET['recipe_id'])) {
     header("Location: User-dashboard.php");
@@ -15,7 +15,7 @@ $check->bind_param("ii", $user_id, $recipe_id);
 $check->execute();
 
 if ($check->get_result()->num_rows === 0) {
-    $stmt = $conn->prepare("INSERT INTO report (userid, recipeid) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO report (userid, recipeid, status) VALUES (?, ?, 'pending')");
     $stmt->bind_param("ii", $user_id, $recipe_id);
     $stmt->execute();
     $stmt->close();
