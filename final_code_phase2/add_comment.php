@@ -1,6 +1,6 @@
 <?php
-include('session.php');
-include('DB.php');
+require_once("session.php");
+require_once("DB.php");
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['recipe_id']) || empty($_POST['comment_text'])) {
     header("Location: User-dashboard.php");
