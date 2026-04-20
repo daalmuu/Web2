@@ -1,31 +1,22 @@
 <?php
-session_start();
-include("DB.php");
+session_start();    
+require_once "UserAuth.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email    = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    $stmt = $conn->prepare("SELECT * FROM user WHERE emailaddress = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $auth = new UserAuth();
 
-    if ($result->num_rows === 0) {
+    $user = $auth->getUserByEmail($email);
+
+    if ($user === null) {
         header("Location: login.php?error=Invalid+email+or+password");
         exit();
     }
 
-    $user = $result->fetch_assoc();
-    $stmt->close();
-    
-    $checkBlock = $conn->prepare("SELECT id FROM blockeduser WHERE emailaddress = ?");
-    $checkBlock->bind_param("s", $email);
-    $checkBlock->execute();
-    $blockResult = $checkBlock->get_result();
-
-    if ($blockResult->num_rows > 0) {
+    if ($auth->isBlocked($email)) {
         header("Location: login.php?error=Your+account+has+been+blocked+by+Admin");
         exit();
     }
@@ -35,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    if (!password_verify($password, $user['password'])) {
+    if (!$auth->verifyPassword($password, $user['password'])) {
         header("Location: login.php?error=Invalid+email+or+password");
         exit();
     }
