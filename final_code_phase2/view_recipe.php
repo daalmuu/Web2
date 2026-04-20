@@ -1,6 +1,6 @@
 <?php
-include('session.php');
-include('DB.php');
+require_once("session.php");
+require_once("DB.php");
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: User-dashboard.php");
