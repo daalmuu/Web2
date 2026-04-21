@@ -168,7 +168,7 @@ try {
     mysqli_stmt_execute($stmtDeleteUser);
     mysqli_stmt_close($stmtDeleteUser);
 
-    // delete the files after delet it from the database
+    /* delete the files after delet it from the database
     foreach ($recipes as $recipe) {
         if (!empty($recipe['photofilename'])) {
             $photoPath = "images/" . $recipe['photofilename'];
@@ -185,6 +185,33 @@ try {
         }
     }
 
+  */  
+  
+if (!empty($recipe['photofilename'])) {
+    $photoPath = "uploads/" . $recipe['photofilename']; 
+    if (file_exists($photoPath)) {
+        unlink($photoPath);
+    }
+}
+
+
+if (!empty($recipe['videofilepath'])) {
+    
+    $videoPath = "uploads/" . $recipe['videofilepath']; 
+
+    if (file_exists($videoPath)) {
+        unlink($videoPath);
+    }
+} 
+    
+    
+    
+    
+    
+    
+    
+    
+    
     mysqli_commit($conn);
 
     header("Location: admin.php?success=User+blocked+successfully");
@@ -196,3 +223,4 @@ try {
     exit();
 }
 ?>
+         
