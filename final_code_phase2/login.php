@@ -10,21 +10,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $auth = new UserAuth();
 
     $user = $auth->getUserByEmail($email);
+    
+       if ($auth->isBlocked($email)) {
+        header("Location: login.php?error=Your+account+has+been+blocked+by+Admin");
+        exit();
+    }
+
+  
 
     if ($user === null) {
         header("Location: login.php?error=Invalid+email+or+password");
         exit();
     }
 
-    if ($auth->isBlocked($email)) {
-        header("Location: login.php?error=Your+account+has+been+blocked+by+Admin");
-        exit();
-    }
-
-    if ($user['usertype'] === 'blocked') {
-        header("Location: login.php?error=Your+account+has+been+blocked");
-        exit();
-    }
+  
 
     if (!$auth->verifyPassword($password, $user['password'])) {
         header("Location: login.php?error=Invalid+email+or+password");
