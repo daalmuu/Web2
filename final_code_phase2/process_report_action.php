@@ -168,24 +168,7 @@ try {
     mysqli_stmt_execute($stmtDeleteUser);
     mysqli_stmt_close($stmtDeleteUser);
 
-    /* delete the files after delet it from the database
-    foreach ($recipes as $recipe) {
-        if (!empty($recipe['photofilename'])) {
-            $photoPath = "images/" . $recipe['photofilename'];
-            if (file_exists($photoPath)) {
-                unlink($photoPath);
-            }
-        }
-
-        if (!empty($recipe['videofilepath'])) {
-            $videoPath = $recipe['videofilepath'];
-            if (file_exists($videoPath)) {
-                unlink($videoPath);
-            }
-        }
-    }
-
-  */  
+    
   
 if (!empty($recipe['photofilename'])) {
     $photoPath = "uploads/" . $recipe['photofilename']; 
@@ -203,11 +186,6 @@ if (!empty($recipe['videofilepath'])) {
         unlink($videoPath);
     }
 } 
-    
-    
-    
-    
-    
     
     
     
