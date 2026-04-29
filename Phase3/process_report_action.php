@@ -2,8 +2,10 @@
 require_once "admin_session.php";
 require_once "DB.php";
 
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: admin.php");
+    echo json_encode(["success" => false]);
     exit();
 }
 
@@ -13,26 +15,28 @@ $creatorid = isset($_POST['creatorid']) ? (int) $_POST['creatorid'] : 0;
 $action    = isset($_POST['action']) ? trim($_POST['action']) : '';
 
 if ($reportid <= 0 || $recipeid <= 0 || $creatorid <= 0 || !in_array($action, ['block', 'dismiss'])) {
-    header("Location: admin.php?error=Invalid+request");
+    echo json_encode(["success" => false]);
     exit();
 }
 
-    // If the action is dismiss simply delete the report and go back.
 if ($action === 'dismiss') {
-    $sqlDeleteReport = "DELETE FROM report WHERE id = ?";
+    $sqlDeleteReport = "DELETE report
+                        FROM report
+                        INNER JOIN recipe ON report.recipeid = recipe.id
+                        WHERE recipe.userid = ?";
+
     $stmtDeleteReport = mysqli_prepare($conn, $sqlDeleteReport);
-    mysqli_stmt_bind_param($stmtDeleteReport, "i", $reportid);
-    mysqli_stmt_execute($stmtDeleteReport);
+    mysqli_stmt_bind_param($stmtDeleteReport, "i", $creatorid);
+    $success = mysqli_stmt_execute($stmtDeleteReport);
     mysqli_stmt_close($stmtDeleteReport);
 
-    header("Location: admin.php?success=Report+dismissed");
+    echo json_encode(["success" => $success]);
     exit();
 }
 
 mysqli_begin_transaction($conn);
 
 try {
-    // Retrieve user data
     $sqlUser = "SELECT id, firstname, lastname, emailaddress, usertype
                 FROM user
                 WHERE id = ?";
@@ -47,12 +51,10 @@ try {
         throw new Exception("User not found.");
     }
 
-    // Prevent admin ban
     if ($userData['usertype'] !== 'user') {
         throw new Exception("You cannot block an admin.");
     }
 
-    // Retrieve all user recipes so we can delete associated files
     $sqlRecipes = "SELECT id, photofilename, videofilepath
                    FROM recipe
                    WHERE userid = ?";
@@ -67,7 +69,6 @@ try {
     }
     mysqli_stmt_close($stmtRecipes);
 
-    // delete all the data associated with each recipe owned by this user
     $sqlDeleteIngredients = "DELETE FROM ingredients WHERE recipeid = ?";
     $stmtDeleteIngredients = mysqli_prepare($conn, $sqlDeleteIngredients);
 
@@ -122,7 +123,6 @@ try {
     mysqli_stmt_close($stmtDeleteReportsByRecipe);
     mysqli_stmt_close($stmtDeleteRecipe);
 
-    //  delete all the data related to the user
     $sqlDeleteUserComments = "DELETE FROM comment WHERE userid = ?";
     $stmtDeleteUserComments = mysqli_prepare($conn, $sqlDeleteUserComments);
     mysqli_stmt_bind_param($stmtDeleteUserComments, "i", $creatorid);
@@ -147,7 +147,6 @@ try {
     mysqli_stmt_execute($stmtDeleteUserReports);
     mysqli_stmt_close($stmtDeleteUserReports);
 
-    // add the user to the blocked list
     $sqlInsertBlocked = "INSERT INTO blockeduser (firstname, lastname, emailaddress)
                          VALUES (?, ?, ?)";
     $stmtInsertBlocked = mysqli_prepare($conn, $sqlInsertBlocked);
@@ -161,44 +160,39 @@ try {
     mysqli_stmt_execute($stmtInsertBlocked);
     mysqli_stmt_close($stmtInsertBlocked);
 
-    // delete the user from the table
     $sqlDeleteUser = "DELETE FROM user WHERE id = ?";
     $stmtDeleteUser = mysqli_prepare($conn, $sqlDeleteUser);
     mysqli_stmt_bind_param($stmtDeleteUser, "i", $creatorid);
     mysqli_stmt_execute($stmtDeleteUser);
     mysqli_stmt_close($stmtDeleteUser);
 
-    
-  
-if (!empty($recipe['photofilename'])) {
-    $photoPath = "uploads/" . $recipe['photofilename']; 
-    if (file_exists($photoPath)) {
-        unlink($photoPath);
+    if (!empty($recipe['photofilename'])) {
+        $photoPath = "uploads/" . $recipe['photofilename'];
+        if (file_exists($photoPath)) {
+            unlink($photoPath);
+        }
     }
-}
 
-
-if (!empty($recipe['videofilepath'])) {
-    
-    $videoPath = "uploads/" . $recipe['videofilepath']; 
-
-    if (file_exists($videoPath)) {
-        unlink($videoPath);
+    if (!empty($recipe['videofilepath'])) {
+        $videoPath = "uploads/" . $recipe['videofilepath'];
+        if (file_exists($videoPath)) {
+            unlink($videoPath);
+        }
     }
-} 
-    
-    
-    
-    
+
     mysqli_commit($conn);
 
-    header("Location: admin.php?success=User+blocked+successfully");
+    echo json_encode([
+        "success" => true,
+        "firstname" => $userData['firstname'],
+        "lastname" => $userData['lastname'],
+        "emailaddress" => $userData['emailaddress']
+    ]);
     exit();
 
 } catch (Exception $e) {
     mysqli_rollback($conn);
-    header("Location: admin.php?error=Action+failed");
+    echo json_encode(["success" => false]);
     exit();
 }
 ?>
-         

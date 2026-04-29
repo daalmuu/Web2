@@ -85,7 +85,7 @@ $resultBlocked = mysqli_query($conn, "SELECT id, firstname, lastname, emailaddre
             <tbody>
                 <?php if ($resultReports && mysqli_num_rows($resultReports) > 0): ?>
                     <?php while ($reportRow = mysqli_fetch_assoc($resultReports)): ?>
-                        <tr>
+                        <tr data-creatorid="<?= (int)$reportRow['creatorid'] ?>">
                             <td>
                                 <a href="view_recipe.php?id=<?= (int)$reportRow['recipeid'] ?>" class="red-link">
                                     <?= htmlspecialchars($reportRow['recipename']) ?>
@@ -100,12 +100,21 @@ $resultBlocked = mysqli_query($conn, "SELECT id, firstname, lastname, emailaddre
                                 </div>
                             </td>
                             <td>
-                                <form action="process_report_action.php" method="POST" class="action-form">
+                                <form class="action-form">
                                     <input type="hidden" name="reportid"  value="<?= (int)$reportRow['reportid'] ?>">
                                     <input type="hidden" name="recipeid"  value="<?= (int)$reportRow['recipeid'] ?>">
                                     <input type="hidden" name="creatorid" value="<?= (int)$reportRow['creatorid'] ?>">
-                                    <label><input type="radio" name="action" value="block" required> <span class="red-text">Block User</span></label>
-                                    <label><input type="radio" name="action" value="dismiss" required> Dismiss</label>
+
+                                    <label>
+                                        <input type="radio" name="action" value="block" required>
+                                        <span class="red-text">Block User</span>
+                                    </label>
+
+                                    <label>
+                                        <input type="radio" name="action" value="dismiss" required>
+                                        Dismiss
+                                    </label>
+
                                     <button type="submit" class="btn-red btn-small">Submit</button>
                                 </form>
                             </td>
@@ -120,7 +129,7 @@ $resultBlocked = mysqli_query($conn, "SELECT id, firstname, lastname, emailaddre
 
     <div class="table-section">
         <h2>🚫 Blocked Users List</h2>
-        <table class="data-table">
+        <table class="data-table blocked-users-table">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -136,7 +145,7 @@ $resultBlocked = mysqli_query($conn, "SELECT id, firstname, lastname, emailaddre
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
-                    <tr><td colspan="2">No blocked users found.</td></tr>
+                    <tr class="no-blocked-row"><td colspan="2">No blocked users found.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -147,6 +156,76 @@ $resultBlocked = mysqli_query($conn, "SELECT id, firstname, lastname, emailaddre
 <footer>
     © 2026 BellaCucina. All rights reserved.
 </footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+    $(".action-form").submit(function (e) {
+        e.preventDefault();
+
+        let form = $(this);
+        let row = form.closest("tr");
+        let creatorid = row.data("creatorid");
+        let action = form.find("input[name='action']:checked").val();
+
+        $.ajax({
+            url: "process_report_action.php",
+            type: "POST",
+            data: form.serialize(),
+            dataType: "json",
+
+            success: function (response) {
+                if (response.success === true) {
+
+                    $("tr[data-creatorid='" + creatorid + "']").remove();
+
+                    if ($(".data-table:first tbody tr[data-creatorid]").length === 0) {
+                        $(".data-table:first tbody").html(
+                            "<tr>" +
+                                "<td colspan='3'>No reported recipes found.</td>" +
+                            "</tr>"
+                        );
+                    }
+
+                    if (action === "block") {
+                        $(".no-blocked-row").remove();
+
+                        let alreadyExists = false;
+
+                        $(".blocked-users-table tbody tr").each(function () {
+                            let email = $(this).find("td:eq(1)").text().trim();
+
+                            if (email === response.emailaddress) {
+                                alreadyExists = true;
+                            }
+                        });
+
+                        if (!alreadyExists) {
+                            $(".blocked-users-table tbody").prepend(
+                                "<tr>" +
+                                    "<td>" + response.firstname + " " + response.lastname + "</td>" +
+                                    "<td>" + response.emailaddress + "</td>" +
+                                "</tr>"
+                            );
+                        }
+                    }
+
+                } else {
+                    alert("Action failed");
+                }
+            },
+
+            error: function () {
+                alert("AJAX request failed");
+            }
+        });
+
+    });
+
+});
+</script>
 
 </body>
 </html>
