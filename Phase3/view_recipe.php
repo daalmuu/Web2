@@ -290,45 +290,43 @@ $stmt->close();
     © 2026 BellaCucina. All rights reserved.
 </footer>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    document.addEventListener('click', function(event) {
-        const button = event.target.closest('.ajax-action');
+    $(document).on('click', '.ajax-action', function(event) {
+        event.preventDefault();
 
-        if (!button || button.disabled || button.dataset.loading === 'true') {
+        const button = $(this);
+
+        if (button.prop('disabled') || button.data('loading') === true) {
             return;
         }
 
-        event.preventDefault();
+        button.data('loading', true);
+        button.css('opacity', '0.7');
 
-        button.dataset.loading = 'true';
-        button.style.opacity = '0.7';
-
-        fetch(button.dataset.url, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-            .then(function(response) {
-                return response.text();
-            })
-            .then(function(result) {
-                if (result.trim() === 'true') {
-                    button.disabled = true;
-                    button.style.opacity = '0.45';
-                    button.style.filter = 'grayscale(60%)';
+        $.ajax({
+            url: button.data('url'),
+            type: 'GET',
+            success: function(result) {
+                if ($.trim(result) === 'true') {
+                    button.prop('disabled', true);
+                    button.css({
+                        opacity: '0.45',
+                        filter: 'grayscale(60%)'
+                    });
                 } else {
-                    button.style.opacity = '';
+                    button.css('opacity', '');
                     alert('The action could not be completed. Please try again.');
                 }
-            })
-            .catch(function() {
-                button.style.opacity = '';
+            },
+            error: function() {
+                button.css('opacity', '');
                 alert('The action could not be completed. Please try again.');
-            })
-            .finally(function() {
-                button.dataset.loading = 'false';
-            });
+            },
+            complete: function() {
+                button.data('loading', false);
+            }
+        });
     });
 </script>
 </body>
