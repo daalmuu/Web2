@@ -1,141 +1,214 @@
 <?php
-require_once("session.php");
-require_once("DB.php");
+session_start(); 
+include 'db.php'; 
 
-if ($_SESSION['usertype'] != "user") {
-    header("Location: login.php?error=Access+denied");
-    exit();
-}
+$userid = $_SESSION['userid']?? 1; 
+
+$errors = []; 
+
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: add_recipe.php");
     exit();
 }
 
-$userid               = (int)$_SESSION['userid'];
-$name                 = trim($_POST['name'] ?? '');
-$description          = trim($_POST['description'] ?? '');
-$categoryid           = intval($_POST['categoryid'] ?? 0);
-$ingredientnames      = $_POST['ingredientname'] ?? [];
+/* ====== 1. DATA COLLECTION & TEXT VALIDATION ====== */
+$name = trim($_POST['name'] ?? '');
+$description = trim($_POST['description'] ?? '');
+$categoryid = intval($_POST['categoryid'] ?? 0);
+$ingredientnames = $_POST['ingredientname'] ?? [];
 $ingredientquantities = $_POST['ingredientquantity'] ?? [];
-$steps                = $_POST['step'] ?? [];
+$steps = $_POST['step'] ?? [];
 
-$errors     = [];
-$upload_dir = "uploads/";
-if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
-
-/* ====== STEP 1: VALIDATE EVERYTHING (no uploads yet) ====== */
-
-if ($name === '')        $errors[] = "Recipe name is required.";
+if ($name === '') $errors[] = "Recipe name is required.";
 if ($description === '') $errors[] = "Description is required.";
-if ($categoryid <= 0)    $errors[] = "Please select a valid category.";
+if ($categoryid <= 0) $errors[] = "Please select a valid category.";
 
-/* -- Validate Photo (no upload yet) -- */
-$new_photo_ready = false;
+$upload_dir = "uploads/";
+if (!is_dir($upload_dir)) {
+    mkdir($upload_dir, 0777, true);
+}
+
+/* ====== 2. PHOTO VALIDATION ====== */
+$photo_path = null;
 if (!isset($_FILES['photo']) || $_FILES['photo']['error'] !== 0) {
     $errors[] = "Recipe photo is required.";
 } else {
-    $tmp      = $_FILES['photo']['tmp_name'];
-    $is_image = @getimagesize($tmp);
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $photo_mime = finfo_file($finfo, $_FILES['photo']['tmp_name']);
+    finfo_close($finfo);
 
-    if ($is_image === false) {
-        $errors[] = "Invalid photo. Please upload a real image file.";
+    $allowed_images = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+    if (!in_array($photo_mime, $allowed_images)) {
+        $errors[] = "Invalid photo type. Detected: " . $photo_mime . ". Please upload an image.";
     } else {
-        $allowed_types = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_WEBP];
-        if (!in_array($is_image[2], $allowed_types)) {
-            $errors[] = "Only JPG, PNG, GIF, WEBP images are allowed.";
-        } else {
-            $new_photo_ready = true; // صالح، لكن ما حملنا بعد
-        }
+       
+    $current_user = $_SESSION['userid'] ?? 1;    
+ 
+$filename_only = "temp_" . time() . "_" . basename($_FILES['photo']['name']);
+$target_directory = "uploads/";
+$full_upload_path = $target_directory . $filename_only;
+
+if (move_uploaded_file($_FILES['photo']['tmp_name'], $full_upload_path)) {
+    
+    $photo_path = $filename_only; 
+}    
     }
 }
 
-/* -- Validate Video (no upload yet) -- */
-$new_video_ready = false;
-$video_url_value = '';
 
+/* ====== 3. VIDEO VALIDATION (STRICT) ====== */
+$video_path = null;
 if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video']['name'] !== '') {
-    $tmp_video      = $_FILES['video']['tmp_name'];
-    $video_ext      = strtolower(pathinfo($_FILES['video']['name'], PATHINFO_EXTENSION));
-    $allowed_videos = ['mp4', 'webm', 'ogg', 'mov'];
-    $is_image       = @getimagesize($tmp_video);
+    $tmp_video = $_FILES['video']['tmp_name'];
+    $video_ext = strtolower(pathinfo($_FILES['video']['name'], PATHINFO_EXTENSION));
 
-    if ($is_image !== false) {
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $video_mime = finfo_file($finfo, $tmp_video);
+    finfo_close($finfo);
+
+    // Check if it's actually an image pretending to be a video
+    $is_image = @getimagesize($tmp_video);
+    $allowed_videos = ['mp4', 'webm', 'ogg', 'mov'];
+
+    if (strpos($video_mime, 'video/') !== 0 || $is_image !== false) {
         $errors[] = "Security Error: The video field must contain a video file, not an image.";
     } elseif (!in_array($video_ext, $allowed_videos)) {
         $errors[] = "Invalid video extension. Supported: " . implode(', ', $allowed_videos);
     } else {
-        $new_video_ready = true; // صالح، لكن ما حملنا بعد
+     $video_name = "temp_" . time() . "_" . basename($_FILES['video']['name']);
+        
+    $full_video_destination = $upload_dir . $video_name;
+    
+        if (move_uploaded_file($tmp_video, $full_video_destination)) {
+            $video_path = $video_name; // هنا المهم: نخزن الاسم فقط للداتابيز (name.mp4)
+        } else {
+            $errors[] = "Failed to upload video file.";
+        }
     }
+    
+   
+}
 
-} elseif (
+// ====== دعم خيار إدخال رابط فيديو بدلاً من رفع ملف ======
+if (
     (!isset($_FILES['video']) || $_FILES['video']['error'] == 4) &&
-    !empty($_POST['video_url'])
+    !empty($_POST['video_url']) &&
+    filter_var($_POST['video_url'], FILTER_VALIDATE_URL)
 ) {
     $url = trim($_POST['video_url']);
-    if (filter_var($url, FILTER_VALIDATE_URL)) {
-        $parsed          = parse_url($url);
-        $host            = $parsed['host'] ?? '';
-        $valid_extension = preg_match('/\.(mp4|webm|mov|avi)$/i', $url);
+    $allowed_hosts = ['youtube.com', 'youtu.be', 'vimeo.com', 'www.youtube.com', 'www.youtu.be', 'www.vimeo.com'];
+    $valid_extension = preg_match('/\.(mp4|webm|mov|avi)$/i', $url);
+    $parsed = parse_url($url);
+    $host = $parsed['host'] ?? '';
 
-        if ($valid_extension || preg_match('/youtube\.com|youtu\.be|vimeo\.com/i', $host)) {
-            $video_url_value = $url; // صالح
-        } else {
-            $errors[] = "Invalid video URL — must be from YouTube, Vimeo, or a direct .mp4/.webm/.mov/.avi link.";
-        }
+    if ($valid_extension || preg_match('/youtube\.com|youtu\.be|vimeo\.com/i', $host)) {
+        $video_path = $url; // نحفظ الرابط نفسه في قاعدة البيانات
     } else {
-        $errors[] = "Invalid video URL format.";
+        $errors[] = "Invalid video URL — must be from YouTube, Vimeo, or a direct .mp4/.webm/.mov/.avi link.";
     }
 }
 
-/* ====== STEP 2: IF ERRORS, STOP. NO FILES WERE UPLOADED ====== */
+
+
+
+
+
+/* ====== 4. DISPLAY ALL ERRORS IF ANY ====== */
 if (!empty($errors)) {
-    echo "<div style='color:#721c24;background:#f8d7da;border:1px solid #f5c6cb;padding:20px;margin:20px;font-family:Arial;border-radius:5px;'>";
-    echo "<h3>Please fix the following errors:</h3><ul>";
-    foreach ($errors as $error) echo "<li>" . htmlspecialchars($error) . "</li>";
-    echo "</ul><br><a href='javascript:history.back()' style='color:#721c24;font-weight:bold;'>Go Back and Edit</a></div>";
-    exit();
-}
-
-/* ====== STEP 3: ALL VALID — NOW UPLOAD FILES ====== */
-
-$photo_path = null;
-if ($new_photo_ready) {
-    $filename_only = $userid . "_" . time() . "_" . basename($_FILES['photo']['name']);
-    if (move_uploaded_file($_FILES['photo']['tmp_name'], $upload_dir . $filename_only)) {
-        $photo_path = $filename_only;
+    echo "<div style='color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 20px; margin: 20px; font-family: Arial, sans-serif; border-radius: 5px;'>";
+    echo "<h3>Please fix the following errors:</h3>";
+    echo "<ul>";
+    foreach ($errors as $error) {
+        echo "<li>" . htmlspecialchars($error) . "</li>";
     }
+    echo "</ul>";
+    echo "<br><a href='javascript:history.back()' style='color: #721c24; font-weight: bold;'>Go Back and Edit</a>";
+    echo "</div>";
+    exit(); // Stop execution here
 }
 
-$video_path = null;
-if ($new_video_ready) {
-    $video_name = time() . "_" . basename($_FILES['video']['name']);
-    if (move_uploaded_file($_FILES['video']['tmp_name'], $upload_dir . $video_name)) {
-        $video_path = $video_name;
-    }
-} elseif ($video_url_value !== '') {
-    $video_path = $video_url_value;
-}
 
-/* ====== STEP 4: DATABASE INSERT ====== */
+    /* ====== 5. DATABASE PROCESSING (No errors found) ====== */
 mysqli_begin_transaction($conn);
+
 try {
-    $stmt = mysqli_prepare($conn, "INSERT INTO recipe (userid, categoryid, name, description, photofilename, videofilepath) VALUES (?, ?, ?, ?, ?, ?)");
+    
+
+    $recipe_sql = "INSERT INTO recipe (userid, categoryid, name, description, photofilename, videofilepath)  
+                   VALUES (?, ?, ?, ?, ?, ?)";
+    
+   
+    $stmt = mysqli_prepare($conn, $recipe_sql);
     mysqli_stmt_bind_param($stmt, "iissss", $userid, $categoryid, $name, $description, $photo_path, $video_path);
-    if (!mysqli_stmt_execute($stmt)) throw new Exception("Error inserting recipe: " . mysqli_error($conn));
+    
+    if (!mysqli_stmt_execute($stmt)) {
+        throw new Exception("Error inserting recipe: " . mysqli_error($conn));
+    }
+    
     $recipeid = mysqli_insert_id($conn);
 
-    $ing_stmt = mysqli_prepare($conn, "INSERT INTO ingredients (recipeid, ingredientname, ingredientquantity) VALUES (?, ?, ?)");
+
+if ($photo_path) {
+    $clean_photo_name = preg_replace('/^temp_\d+_/', '', basename($photo_path));
+    $new_photo_name = "recipe_" . $recipeid . "_" . $clean_photo_name;
+
+    rename("uploads/" . $photo_path, "uploads/" . $new_photo_name);
+    $photo_path = $new_photo_name;
+}
+
+if ($video_path && !filter_var($video_path, FILTER_VALIDATE_URL)) {
+    $clean_video_name = preg_replace('/^temp_\d+_/', '', basename($video_path));
+    $new_video_name = "recipe_" . $recipeid . "_" . $clean_video_name;
+
+    rename("uploads/" . $video_path, "uploads/" . $new_video_name);
+    $video_path = $new_video_name;
+}
+
+
+
+
+
+    
+
+if ($photo_path) {
+    $new_photo_name = "recipe_" . $recipeid . "_" . basename($photo_path);
+    rename("uploads/" . $photo_path, "uploads/" . $new_photo_name);
+    $photo_path = $new_photo_name;
+}
+
+if ($video_path && !filter_var($video_path, FILTER_VALIDATE_URL)) {
+    $new_video_name = "recipe_" . $recipeid . "_" . basename($video_path);
+    rename("uploads/" . $video_path, "uploads/" . $new_video_name);
+    $video_path = $new_video_name;
+}
+
+$update_sql = "UPDATE recipe SET photofilename = ?, videofilepath = ? WHERE id = ?";
+$update_stmt = mysqli_prepare($conn, $update_sql);
+mysqli_stmt_bind_param($update_stmt, "ssi", $photo_path, $video_path, $recipeid);
+mysqli_stmt_execute($update_stmt);
+
+
+
+
+
+    
+
+    // Ingredients insertion
+    $ing_sql = "INSERT INTO ingredients (recipeid, ingredientname, ingredientquantity) VALUES (?, ?, ?)";
+    $ing_stmt = mysqli_prepare($conn, $ing_sql);
     for ($i = 0; $i < count($ingredientnames); $i++) {
         $iname = trim($ingredientnames[$i] ?? '');
-        $iqty  = trim($ingredientquantities[$i] ?? '');
+        $iqty = trim($ingredientquantities[$i] ?? '');
         if ($iname !== '') {
             mysqli_stmt_bind_param($ing_stmt, "iss", $recipeid, $iname, $iqty);
             mysqli_stmt_execute($ing_stmt);
         }
     }
 
-    $ins_stmt = mysqli_prepare($conn, "INSERT INTO instructions (recipeid, step, steporder) VALUES (?, ?, ?)");
+    // Instructions insertion
+    $ins_sql = "INSERT INTO instructions (recipeid, step, steporder) VALUES (?, ?, ?)";
+    $ins_stmt = mysqli_prepare($conn, $ins_sql);
     $order = 1;
     foreach ($steps as $steptext) {
         $steptext = trim($steptext);
@@ -152,9 +225,9 @@ try {
 
 } catch (Exception $e) {
     mysqli_rollback($conn);
-    // لو صار خطأ في DB احذف الملفات اللي حملناها
-    if ($photo_path && file_exists($upload_dir . $photo_path)) unlink($upload_dir . $photo_path);
-    if ($video_path && !filter_var($video_path, FILTER_VALIDATE_URL) && file_exists($upload_dir . $video_path)) unlink($upload_dir . $video_path);
+    // Cleanup uploaded files on DB failure
+    if (file_exists($photo_path)) unlink($photo_path);
+    if ($video_path && file_exists($video_path)) unlink($video_path);
     die("Database Error: " . $e->getMessage());
 }
 ?>
