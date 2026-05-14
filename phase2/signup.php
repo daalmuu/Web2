@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tmpName   = $_FILES['profile-photo']['tmp_name'];
         $origName  = basename($_FILES['profile-photo']['name']);
         $extension = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
-        $newFileName = uniqid("user_", true) . "." . $extension;
+        $newFileName = "temp_" . time() . "." . $extension;
         $uploadPath  = "images/" . $newFileName;
 
         if (move_uploaded_file($tmpName, $uploadPath)) {
@@ -44,6 +44,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
 
     $newUserID = $conn->insert_id;
+
+
+
+if ($photoFileName !== "default.png") {
+    $newPhotoFileName = "user_" . $newUserID . "." . pathinfo($photoFileName, PATHINFO_EXTENSION);
+
+    rename("images/" . $photoFileName, "images/" . $newPhotoFileName);
+
+    $photoFileName = $newPhotoFileName;
+
+    $updateStmt = $conn->prepare("UPDATE user SET photofilename = ? WHERE id = ?");
+    $updateStmt->bind_param("si", $photoFileName, $newUserID);
+    $updateStmt->execute();
+    $updateStmt->close();
+}
+
+
+
+
+    
     $stmt->close();
 
     $_SESSION['userid']   = $newUserID;
