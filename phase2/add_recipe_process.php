@@ -150,6 +150,28 @@ try {
 
 
 if ($photo_path) {
+    $clean_photo_name = preg_replace('/^temp_\d+_/', '', basename($photo_path));
+    $new_photo_name = "recipe_" . $recipeid . "_" . $clean_photo_name;
+
+    rename("uploads/" . $photo_path, "uploads/" . $new_photo_name);
+    $photo_path = $new_photo_name;
+}
+
+if ($video_path && !filter_var($video_path, FILTER_VALIDATE_URL)) {
+    $clean_video_name = preg_replace('/^temp_\d+_/', '', basename($video_path));
+    $new_video_name = "recipe_" . $recipeid . "_" . $clean_video_name;
+
+    rename("uploads/" . $video_path, "uploads/" . $new_video_name);
+    $video_path = $new_video_name;
+}
+
+
+
+
+
+    
+
+if ($photo_path) {
     $new_photo_name = "recipe_" . $recipeid . "_" . basename($photo_path);
     rename("uploads/" . $photo_path, "uploads/" . $new_photo_name);
     $photo_path = $new_photo_name;
