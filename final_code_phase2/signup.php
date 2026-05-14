@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $origName  = basename($_FILES['profile-photo']['name']);
         $extension = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
         $newFileName = "temp_" . time() . "." . $extension;
-        $uploadPath  = "images/" . $newFileName;
+        $uploadPath  = "uploads/" . $newFileName;
 
         if (move_uploaded_file($tmpName, $uploadPath)) {
             $photoFileName = $newFileName;
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($photoFileName !== "default.png") {
     $newPhotoFileName = "user_" . $newUserID . "." . pathinfo($photoFileName, PATHINFO_EXTENSION);
 
-    rename("images/" . $photoFileName, "images/" . $newPhotoFileName);
+    rename("uploads/" . $photoFileName, "uploads/" . $newPhotoFileName);
 
     $photoFileName = $newPhotoFileName;
 
@@ -148,3 +148,4 @@ if ($photoFileName !== "default.png") {
         </footer>
     </body>
 </html>
+
