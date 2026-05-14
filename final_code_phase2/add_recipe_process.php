@@ -150,44 +150,27 @@ try {
 
 
 if ($photo_path) {
-    $clean_photo_name = preg_replace('/^temp_\d+_/', '', basename($photo_path));
+    $clean_photo_name = preg_replace('/^(temp_\d+_|recipe_\d+_)+/', '', basename($photo_path));
     $new_photo_name = "recipe_" . $recipeid . "_" . $clean_photo_name;
 
-    rename("uploads/" . $photo_path, "uploads/" . $new_photo_name);
-    $photo_path = $new_photo_name;
+    if (rename($upload_dir . $photo_path, $upload_dir . $new_photo_name)) {
+        $photo_path = $new_photo_name;
+    }
 }
 
 if ($video_path && !filter_var($video_path, FILTER_VALIDATE_URL)) {
-    $clean_video_name = preg_replace('/^temp_\d+_/', '', basename($video_path));
+    $clean_video_name = preg_replace('/^(temp_\d+_|recipe_\d+_)+/', '', basename($video_path));
     $new_video_name = "recipe_" . $recipeid . "_" . $clean_video_name;
 
-    rename("uploads/" . $video_path, "uploads/" . $new_video_name);
-    $video_path = $new_video_name;
-}
-
-
-
-
-
-    
-
-if ($photo_path) {
-    $new_photo_name = "recipe_" . $recipeid . "_" . basename($photo_path);
-    rename("uploads/" . $photo_path, "uploads/" . $new_photo_name);
-    $photo_path = $new_photo_name;
-}
-
-if ($video_path && !filter_var($video_path, FILTER_VALIDATE_URL)) {
-    $new_video_name = "recipe_" . $recipeid . "_" . basename($video_path);
-    rename("uploads/" . $video_path, "uploads/" . $new_video_name);
-    $video_path = $new_video_name;
+    if (rename($upload_dir . $video_path, $upload_dir . $new_video_name)) {
+        $video_path = $new_video_name;
+    }
 }
 
 $update_sql = "UPDATE recipe SET photofilename = ?, videofilepath = ? WHERE id = ?";
 $update_stmt = mysqli_prepare($conn, $update_sql);
 mysqli_stmt_bind_param($update_stmt, "ssi", $photo_path, $video_path, $recipeid);
 mysqli_stmt_execute($update_stmt);
-
 
 
 
@@ -231,3 +214,4 @@ mysqli_stmt_execute($update_stmt);
     die("Database Error: " . $e->getMessage());
 }
 ?>
+
