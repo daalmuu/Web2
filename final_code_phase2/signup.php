@@ -1,6 +1,6 @@
 <?php
-session_start();       
-require_once "UserAuth.php";
+session_start();
+include("DB.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -9,24 +9,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email     = trim($_POST['email']);
     $password  = trim($_POST['password']);
 
-    $auth = new UserAuth();
+    $stmt = $conn->prepare("SELECT id FROM user WHERE emailaddress = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
 
-    if ($auth->emailExists($email)) {
+    if ($stmt->num_rows > 0) {
+        $stmt->close();
         header("Location: signup.php?error=Email+is+already+registered");
         exit();
     }
+    $stmt->close();
 
-    if ($auth->isBlocked($email)) {
-        header("Location: signup.php?error=Your+account+has+been+blocked+by+Admin");
-        exit();
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    $photoFileName = "default.png";
+
+    if (!empty($_FILES['profile-photo']['name'])) {
+        $tmpName   = $_FILES['profile-photo']['tmp_name'];
+        $origName  = basename($_FILES['profile-photo']['name']);
+        $extension = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+        $newFileName = "temp_" . time() . "." . $extension;
+        $uploadPath  = "images/" . $newFileName;
+
+        if (move_uploaded_file($tmpName, $uploadPath)) {
+            $photoFileName = $newFileName;
+        }
     }
 
-    $photoFileName = $auth->uploadProfilePhoto($_FILES['profile-photo'] ?? []);
+    $userType = "user";
+    $stmt = $conn->prepare("INSERT INTO user (firstname, lastname, emailaddress, password, photofilename, usertype)
+                            VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $firstName, $lastName, $email, $hashedPassword, $photoFileName, $userType);
+    $stmt->execute();
 
-    $newUserID = $auth->registerUser($firstName, $lastName, $email, $password, $photoFileName);
+    $newUserID = $conn->insert_id;
+
+
+
+if ($photoFileName !== "default.png") {
+    $newPhotoFileName = "user_" . $newUserID . "." . pathinfo($photoFileName, PATHINFO_EXTENSION);
+
+    rename("images/" . $photoFileName, "images/" . $newPhotoFileName);
+
+    $photoFileName = $newPhotoFileName;
+
+    $updateStmt = $conn->prepare("UPDATE user SET photofilename = ? WHERE id = ?");
+    $updateStmt->bind_param("si", $photoFileName, $newUserID);
+    $updateStmt->execute();
+    $updateStmt->close();
+}
+
+
+
+
+    
+    $stmt->close();
 
     $_SESSION['userid']   = $newUserID;
-    $_SESSION['usertype'] = 'user';
+    $_SESSION['usertype'] = $userType;
 
     header("Location: User-dashboard.php");
     exit();
@@ -43,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body>
         <header>
             <div class="header-container">
-                <img src="uploads/logo.png" alt="BellaCucina Logo" class="logo">
+                <img src="images/logo.png" alt="BellaCucina Logo" class="logo">
                 <nav class="nav-menu">
                     <a href="index.html" class="signout-link">
                         <span class="homepage-icon text">↩ HomePage</span>
@@ -68,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="profile-upload-section">
                         <div class="profile-circle">👤</div>
                         <label for="profile-photo">Upload Photo</label>
-                        <input type="file" id="profile-photo" name="profile-photo" accept="uploads/*">
+                        <input type="file" id="profile-photo" name="profile-photo" accept="image/*">
                         <span class="optional">(Optional)</span>
                     </div>
 
