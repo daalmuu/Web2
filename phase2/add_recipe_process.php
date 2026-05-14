@@ -46,7 +46,7 @@ if (!isset($_FILES['photo']) || $_FILES['photo']['error'] !== 0) {
         $photo_path = $upload_dir . $photo_name;*/
     $current_user = $_SESSION['userid'] ?? 1;    
  
- $filename_only = $current_user . "_" . time() . "_" . basename($_FILES['photo']['name']);
+$filename_only = "recipe_" . $recipeid . "_" . time() . "_" . basename($_FILES['photo']['name']);
 $target_directory = "uploads/";
 $full_upload_path = $target_directory . $filename_only;
 
@@ -77,7 +77,7 @@ if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video
     } elseif (!in_array($video_ext, $allowed_videos)) {
         $errors[] = "Invalid video extension. Supported: " . implode(', ', $allowed_videos);
     } else {
-       $video_name = time() . "_" . basename($_FILES['video']['name']);
+      $video_name = "recipe_" . $recipeid . "_" . time() . "_" . basename($_FILES['video']['name']);
         
     $full_video_destination = $upload_dir . $video_name;
     
