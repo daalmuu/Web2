@@ -42,11 +42,10 @@ if (!isset($_FILES['photo']) || $_FILES['photo']['error'] !== 0) {
     if (!in_array($photo_mime, $allowed_images)) {
         $errors[] = "Invalid photo type. Detected: " . $photo_mime . ". Please upload an image.";
     } else {
-        /*$photo_name = time() . "_" . basename($_FILES['photo']['name']);
-        $photo_path = $upload_dir . $photo_name;*/
+       
     $current_user = $_SESSION['userid'] ?? 1;    
  
-$filename_only = "recipe_" . $recipeid . "_" . time() . "_" . basename($_FILES['photo']['name']);
+$filename_only = "temp_" . time() . "_" . basename($_FILES['photo']['name']);
 $target_directory = "uploads/";
 $full_upload_path = $target_directory . $filename_only;
 
@@ -77,7 +76,7 @@ if (isset($_FILES['video']) && $_FILES['video']['error'] === 0 && $_FILES['video
     } elseif (!in_array($video_ext, $allowed_videos)) {
         $errors[] = "Invalid video extension. Supported: " . implode(', ', $allowed_videos);
     } else {
-      $video_name = "recipe_" . $recipeid . "_" . time() . "_" . basename($_FILES['video']['name']);
+     $video_name = "temp_" . time() . "_" . basename($_FILES['video']['name']);
         
     $full_video_destination = $upload_dir . $video_name;
     
@@ -148,6 +147,30 @@ try {
     }
     
     $recipeid = mysqli_insert_id($conn);
+
+
+if ($photo_path) {
+    $new_photo_name = "recipe_" . $recipeid . "_" . basename($photo_path);
+    rename("uploads/" . $photo_path, "uploads/" . $new_photo_name);
+    $photo_path = $new_photo_name;
+}
+
+if ($video_path && !filter_var($video_path, FILTER_VALIDATE_URL)) {
+    $new_video_name = "recipe_" . $recipeid . "_" . basename($video_path);
+    rename("uploads/" . $video_path, "uploads/" . $new_video_name);
+    $video_path = $new_video_name;
+}
+
+$update_sql = "UPDATE recipe SET photofilename = ?, videofilepath = ? WHERE id = ?";
+$update_stmt = mysqli_prepare($conn, $update_sql);
+mysqli_stmt_bind_param($update_stmt, "ssi", $photo_path, $video_path, $recipeid);
+mysqli_stmt_execute($update_stmt);
+
+
+
+
+
+    
 
     // Ingredients insertion
     $ing_sql = "INSERT INTO ingredients (recipeid, ingredientname, ingredientquantity) VALUES (?, ?, ?)";
