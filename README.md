@@ -6,7 +6,8 @@ BellaCucina is a healthy Italian recipe sharing web application that allows user
 - User registration and login
 - Add, edit, and delete recipes
 - Upload recipe images and videos
-- Favorite recipes system
+- Favorite , Report , Like a recipes 
+- Share a comment with other
 - Admin dashboard
 - AJAX functionalities using jQuery
 - Responsive and modern UI design
@@ -17,7 +18,7 @@ BellaCucina is a healthy Italian recipe sharing web application that allows user
 - HTML5
 - CSS
 - JavaScript
-- AJAX
+- jQuery & AJAX
 
 ## Live Website
 https://bellacucina.infinityfree.me
