@@ -20,7 +20,7 @@ BellaCucina is a healthy Italian recipe sharing web application that allows user
 - JavaScript
 - jQuery & AJAX
 
-## Live Website
+##  Website Link
 https://bellacucina.infinityfree.me
 
 ## Database
