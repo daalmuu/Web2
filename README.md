@@ -35,6 +35,7 @@ Import the provided SQL file into MySQL before running the project locally.
 
 For MAMP
 - $conn = new mysqli("localhost", "root", "root", "bellacucina_db", 8889);
+  
 For XAMPP
 - $conn = new mysqli("localhost", "root", "", "bellacucina_db", 3306);
 
